@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 // export default function Home() {
 //   return (
 //     <main className="flex min-h-screen flex-col items-center justify-center p-24">
@@ -97,11 +99,22 @@ export default function Home() {
                     NoteGenius
                   </div>
                 </div>
+
+                {/* Navigation bar */}
                 <nav style={{ marginLeft: 'auto' }}>
-                  <ul className="flex space-x-4">
-                    <li><a href="/support" className="text-white">Support</a></li>
-                    <li><a href="/subscribe" className="text-white">Subscribe</a></li>
-                    <li><a href="/settings" className="text-white">Settings</a></li>
+                  <ul className="flex space-x-4 text-xl underline">
+                    <li><a href="/support" className="text-white px-4 flex">
+                      <img src="/support.png" alt="Support" className="h-8 w-8 mr-2 -mt-0.5" />
+                      Support
+                    </a></li>
+                    <li><a href="/subscribe" className="text-white px-4 flex">
+                      <img src ="/subscribe.webp" alt="Subscribe" className="h-10 w-10 mr-2 -mt-1.5" />
+                      Subscribe
+                    </a></li>
+                    <li><a href="/settings" className="text-white px-4 flex">
+                      <img src="/settings.png" alt="Settings" className="h-8 w-8 mr-2 -mt-0.5" />
+                      Settings
+                    </a></li>
                   </ul>
                 </nav>
               </div>
