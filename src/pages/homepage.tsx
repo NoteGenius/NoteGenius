@@ -1,5 +1,5 @@
-import "@/app/bubble.css";
-import "@/app/grid.css";
+import "@/style/bubble.css";
+import "@/style/grid.css";
 
 function HomePage() {
     return (
