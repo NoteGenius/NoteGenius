@@ -29,6 +29,9 @@ function HomePage() {
 
             {/* Cool Bubble */}
             <div className="bubble"></div>
+
+            {/* space */}
+            <div className="h-1/16"></div>
         </main>
     );
 }
