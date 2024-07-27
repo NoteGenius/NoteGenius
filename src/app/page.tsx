@@ -3,7 +3,6 @@ import HomePage from "@/pages/homepage";
 import { GoogleAnalytics } from "nextjs-google-analytics";
 
 export default function Home() {
-
   return (
     <div>
       <HomePage />
