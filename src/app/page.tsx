@@ -6,7 +6,8 @@ export default function Home() {
   return (
     <div>
       <HomePage />
-      // Google Analytics
+
+      {/* Google Analytics */}
       <GoogleAnalytics
         trackPageViews
         strategy="lazyOnload"
