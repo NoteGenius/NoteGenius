@@ -24,13 +24,23 @@ body {
     transform: translate(40%, -25%) scale(1);
     border-radius: 60% 40% 30% 70% / 100% 85% 92% 74%;
   }
+  25% {
+    transform: translate(20%, -10%) scale(1.1);
+    border-radius: 50% 30% 40% 60% / 80% 90% 70% 50%;
+    rotate: 20deg;
+  }
   50% {
-    transform: translate(0%, 13%) scale(1.15);
+    transform: translate(-40%, 13%) scale(1.15);
     border-radius: 20% 71% 47% 70% / 81% 15% 22% 54%;
     rotate: 41deg;
   }
+  75% {
+    transform: translate(-50%, 30%) scale(1.1);
+    border-radius: 40% 60% 50% 30% / 70% 50% 80% 90%;
+    rotate: -20deg;
+  }
   100% {
-    transform: translate(-45%, 39%) scale(1.05);
+    transform: translate(45%, 39%) scale(1.05);
     border-radius: 100% 75% 92% 74% / 60% 80% 30% 70%;
     rotate: -60deg;
   }
