@@ -1,12 +1,19 @@
 "use client"; // client hook
-import { PageControlProvider } from "@/Core/PageContext";
-import Main from "@/Pages/Main";
-import { useRef } from "react";
+import { PageControlProvider, usePageManager } from "@/Core/PageContext";
+import TestPage from "@/Pages/Test";
 
 export default function Home() {
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const { navigateToPage } = usePageManager(initPages);
 
     return (
-        <Main />
+        <PageControlProvider 
+            defaultPage="test"
+            navigateToPage={navigateToPage}
+        />
     );
 }
+
+const initPages = [
+    <TestPage key="test"/>,
+]

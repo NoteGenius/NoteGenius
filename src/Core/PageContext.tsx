@@ -2,10 +2,8 @@ import React, { createContext, useState, useEffect, useCallback, useContext, Rea
 import { useRouter } from 'next/router';
 
 type PageControlContextType = {
-    currentPage: string;
-    previousPage: string;
-    onPageLoad: (pageId: string, callback: () => void) => void;
-    onPageUnload: (pageId: string, callback: () => void) => void;
+    defaultPage: string;
+    navigateToPage(pageId: string): void;
     children?: ReactNode;
 };
 
@@ -23,23 +21,23 @@ export const PageControlProvider: React.FC<PageControlContextType> = ({ children
 
 type PageInstance = {
     id: string;
-    onLoad?: () => void;
-    onUnload?: () => void;
+    onOpen?: () => void;
+    onClose?: () => void;
 };
 
-export const usePageManager = () => {
+export const usePageManager = (pages: ReactElement[]) => {
     const [pageDictionary, setPageDictionary] = useState<{ [key: string]: PageInstance }>({});
     const [currentPage, setCurrentPage] = useState('');
-    const [previousPage, setPreviousPage] = useState('');
     const router = useRouter();
 
+    /** Handles adding pages to the dictionary and calling the onOpen function for the panel */
     const onPageLoad = useCallback(
         (pageId: string, callback: () => void) => {
             setPageDictionary(prev => ({
                 ...prev,
                 [pageId]: {
                     ...prev[pageId],
-                    onLoad: callback,
+                    onOpen: callback,
                 },
             }));
         },
@@ -52,35 +50,52 @@ export const usePageManager = () => {
                 ...prev,
                 [pageId]: {
                     ...prev[pageId],
-                    onUnload: callback,
+                    onClose: callback,
                 },
             }));
         },
         [setPageDictionary]
     );
 
+    const registerPage = useCallback(
+        (page: PageInstance) => {
+            setPageDictionary(prev => ({
+                ...prev,
+                [page.id]: {
+                    id: page.id,
+                    onOpen: page.onOpen,
+                    onClose: page.onClose,
+                },
+            }));
+        },
+        [setPageDictionary]
+    );
+
+    const navigateToPage = useCallback(
+        (pageId: string) => {
+            if (pageDictionary[pageId]) {
+                router.push(pageId);
+            }
+        },
+        [pageDictionary, router]
+    );
+
+    const {defaultPage} = usePageControlContext()
+
     useEffect(() => {
-        const handleRouteChange = (url: string) => {
-            setPreviousPage(currentPage);
-            setCurrentPage(url);
-            if (pageDictionary[url] && pageDictionary[url].onLoad) {
-                pageDictionary[url].onLoad();
-            }
-            if (pageDictionary[currentPage] && pageDictionary[currentPage].onUnload) {
-                pageDictionary[currentPage].onUnload();
-            }
-        };
+        pages.forEach(pageData => {
+            registerPage(pageData.props as PageInstance);
+        })
 
-        router.events.on('routeChangeStart', handleRouteChange);
-
-        return () => {
-            router.events.off('routeChangeStart', handleRouteChange);
-        };
-    }, [currentPage, pageDictionary, router.events]);
+        // opening the default page
+        if (router.pathname === '/') {
+            navigateToPage(defaultPage);
+        }
+    }, [currentPage, pageDictionary, pages, registerPage, router.events]);
 
     return {
         currentPage,
-        previousPage,
+        navigateToPage,
         onPageLoad,
         onPageUnload,
     };
