@@ -1,65 +1,69 @@
-import React, { createContext, useState, useEffect, useCallback, useContext, ReactNode, ReactElement } from 'react';
-import { useRouter } from 'next/router';
+/**
+ * The PageControlContext is accessable everywhere within the project
+ *
+ * The PageControlProvider is a wrapper component that provides the PageControlContext to its children
+ * the manager controls the registry of pages and holds the navigation functions
+ */
 
+import React, {
+    createContext,
+    useState,
+    useEffect,
+    useCallback,
+    useContext,
+    ReactNode,
+    ReactElement,
+} from "react";
+import { useRouter } from "next/router";
+
+// variables and functions accessable throughout the entire project
 type PageControlContextType = {
     defaultPage: string;
-    navigateToPage(pageId: string): void;
+    openPage(pageId: string): void;
     children?: ReactNode;
 };
 
 const PageControlContext = createContext<PageControlContextType | null>(null);
 
+// custom hook to access the PageControlContext within the project
 export const usePageControlContext = () => {
     const context = useContext(PageControlContext);
-    if (!context) throw new Error('usePageControlContext must be used within a PageControlProvider');
+    if (!context)
+        throw new Error(
+            "usePageControlContext must be used within a PageControlProvider",
+        );
     return context;
 };
 
-export const PageControlProvider: React.FC<PageControlContextType> = ({ children, ...methods }) => {
-    return <PageControlContext.Provider value={methods}>{children}</PageControlContext.Provider>;
+// the PageControlProvider component that wraps the entire project
+export const PageControlProvider: React.FC<PageControlContextType> = ({
+    children,
+    ...methods
+}) => {
+    return (
+        <PageControlContext.Provider value={methods}>
+            {children}
+        </PageControlContext.Provider>
+    );
 };
 
+// structure of page data they are stored as in the page manager's registry'
 type PageInstance = {
     id: string;
     onOpen?: () => void;
     onClose?: () => void;
 };
 
+// custom hook to manage the pages and navigation
 export const usePageManager = (pages: ReactElement[]) => {
-    const [pageDictionary, setPageDictionary] = useState<{ [key: string]: PageInstance }>({});
-    const [currentPage, setCurrentPage] = useState('');
+    const [pageDictionary, setPageDictionary] = useState<{
+        [key: string]: PageInstance;
+    }>({});
     const router = useRouter();
-
-    /** Handles adding pages to the dictionary and calling the onOpen function for the panel */
-    const onPageLoad = useCallback(
-        (pageId: string, callback: () => void) => {
-            setPageDictionary(prev => ({
-                ...prev,
-                [pageId]: {
-                    ...prev[pageId],
-                    onOpen: callback,
-                },
-            }));
-        },
-        [setPageDictionary]
-    );
-
-    const onPageUnload = useCallback(
-        (pageId: string, callback: () => void) => {
-            setPageDictionary(prev => ({
-                ...prev,
-                [pageId]: {
-                    ...prev[pageId],
-                    onClose: callback,
-                },
-            }));
-        },
-        [setPageDictionary]
-    );
 
     const registerPage = useCallback(
         (page: PageInstance) => {
-            setPageDictionary(prev => ({
+            setPageDictionary((prev) => ({
                 ...prev,
                 [page.id]: {
                     id: page.id,
@@ -68,35 +72,34 @@ export const usePageManager = (pages: ReactElement[]) => {
                 },
             }));
         },
-        [setPageDictionary]
+        [setPageDictionary],
     );
 
-    const navigateToPage = useCallback(
-        (pageId: string) => {
-            if (pageDictionary[pageId]) {
+    const openPage = useCallback(
+        (pageId: string, previousPageId?: string) => {
+            const entry = pageDictionary[pageId];
+            if (entry) {
+                entry.onOpen && entry.onOpen();
                 router.push(pageId);
             }
         },
-        [pageDictionary, router]
+        [pageDictionary, router],
     );
 
-    const {defaultPage} = usePageControlContext()
+    const { defaultPage } = usePageControlContext();
 
     useEffect(() => {
-        pages.forEach(pageData => {
+        pages.forEach((pageData) => {
             registerPage(pageData.props as PageInstance);
-        })
+        });
 
         // opening the default page
-        if (router.pathname === '/') {
-            navigateToPage(defaultPage);
+        if (router.pathname === "/") {
+            openPage(defaultPage);
         }
-    }, [currentPage, pageDictionary, pages, registerPage, router.events]);
+    }, [defaultPage, openPage, pages, registerPage, router.pathname]);
 
     return {
-        currentPage,
-        navigateToPage,
-        onPageLoad,
-        onPageUnload,
+        openPage,
     };
 };
