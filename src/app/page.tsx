@@ -1,19 +1,12 @@
 "use client"; // client hook
 import { PageControlProvider, usePageManager } from "@/Core/PageContext";
-import TestPage from "@/Pages/Test";
 
 export default function Home() {
+    const { openPage } = usePageManager(initPages, "index");
 
-    const { navigateToPage } = usePageManager(initPages);
-
-    return (
-        <PageControlProvider 
-            defaultPage="test"
-            navigateToPage={navigateToPage}
-        />
-    );
+    return <PageControlProvider openPage={openPage} />;
 }
 
-const initPages = [
-    <TestPage key="test"/>,
-]
+import Main from "@/app/index/page";
+
+const initPages = [<Main key="main" pageId={"index"} />];

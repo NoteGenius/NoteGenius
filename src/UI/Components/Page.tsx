@@ -1,5 +1,6 @@
-import { usePageManager } from "@/Core/PageContext";
-import { useEffect } from "react";
+export type PagePropsImpl = {
+    pageId: string;
+};
 
 type PageProps = {
     children: React.ReactNode;
@@ -8,11 +9,8 @@ type PageProps = {
     onClose?(): void;
 };
 
-const Page: React.FC<PageProps> = ({
-    children,
-}) => {
-
+const Page: React.FC<PageProps> = ({ children }) => {
     return <>{children}</>;
-}
+};
 
 export default Page;

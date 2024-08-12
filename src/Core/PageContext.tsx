@@ -5,6 +5,7 @@
  * the manager controls the registry of pages and holds the navigation functions
  */
 
+import { useRouter } from "next/navigation";
 import React, {
     createContext,
     useState,
@@ -13,13 +14,12 @@ import React, {
     useContext,
     ReactNode,
     ReactElement,
+    useRef,
 } from "react";
-import { useRouter } from "next/router";
 
 // variables and functions accessable throughout the entire project
 type PageControlContextType = {
-    defaultPage: string;
-    openPage(pageId: string): void;
+    openPage(pageId: string, previousPageId: string): void;
     children?: ReactNode;
 };
 
@@ -55,7 +55,7 @@ type PageInstance = {
 };
 
 // custom hook to manage the pages and navigation
-export const usePageManager = (pages: ReactElement[]) => {
+export const usePageManager = (pages: ReactElement[], defaultPage: string) => {
     const [pageDictionary, setPageDictionary] = useState<{
         [key: string]: PageInstance;
     }>({});
@@ -63,41 +63,40 @@ export const usePageManager = (pages: ReactElement[]) => {
 
     const registerPage = useCallback(
         (page: PageInstance) => {
-            setPageDictionary((prev) => ({
-                ...prev,
-                [page.id]: {
-                    id: page.id,
-                    onOpen: page.onOpen,
-                    onClose: page.onClose,
-                },
-            }));
+            pageDictionary[page.id] = page;
         },
-        [setPageDictionary],
+        [pageDictionary],
     );
 
     const openPage = useCallback(
-        (pageId: string, previousPageId?: string) => {
+        (pageId: string, previousPageId: string) => {
+            // calling the onOpen function for the new page and pushing to that page
             const entry = pageDictionary[pageId];
             if (entry) {
                 entry.onOpen && entry.onOpen();
-                router.push(pageId);
+                router!.push(`/${entry.id}`);
             }
+            // calling the onClose function for the previous page
+            const previousEntry = pageDictionary[previousPageId];
+            if (previousEntry) previousEntry.onClose && previousEntry.onClose();
         },
         [pageDictionary, router],
     );
 
-    const { defaultPage } = usePageControlContext();
-
     useEffect(() => {
+        // registering the pages
         pages.forEach((pageData) => {
+            console.log(pageData);
             registerPage(pageData.props as PageInstance);
         });
 
-        // opening the default page
-        if (router.pathname === "/") {
-            openPage(defaultPage);
-        }
-    }, [defaultPage, openPage, pages, registerPage, router.pathname]);
+        const page = pageDictionary[defaultPage];
+        console.log(pageDictionary);
+        // if (page.onOpen) page.onOpen();
+        // router.push(defaultPage);
+
+        // router.push(`/${(defaultPage.props as PageInstance).id}`);
+    }, [registerPage, pages, pageDictionary, defaultPage]);
 
     return {
         openPage,
