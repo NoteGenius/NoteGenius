@@ -1,12 +1,13 @@
-"use client"; // client hook
-import { PageControlProvider, usePageManager } from "@/Core/PageContext";
+"use client";
+import Topbar from "@/UI/Components/Topbar";
 
+// client hook
+
+/** Main page code */
 export default function Home() {
-    const { openPage } = usePageManager(initPages, "index");
-
-    return <PageControlProvider openPage={openPage} />;
+    return (
+        <main className="flex items-center justify-center h-screen bg-gradient-to-t from-gray-custom-light to-gray-custom">
+            <Topbar />
+        </main>
+    );
 }
-
-import Main from "@/app/index/page";
-
-const initPages = [<Main key="main" pageId={"index"} />];
