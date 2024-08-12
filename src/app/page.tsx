@@ -1,12 +1,13 @@
-"use client"; // client hook
-import { PageControlProvider } from "@/Core/PageContext";
-import Main from "@/Pages/Main";
-import { useRef } from "react";
+"use client";
+import Topbar from "@/UI/Components/Topbar";
 
+// client hook
+
+/** Main page code */
 export default function Home() {
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-
     return (
-        <Main />
+        <main className="flex items-center justify-center h-screen bg-gradient-to-t from-gray-custom-light to-gray-custom">
+            <Topbar />
+        </main>
     );
 }
