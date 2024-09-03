@@ -26,7 +26,7 @@ const Textbar: React.FC = () => {
     };
 
     return (
-        <div className="fixed bottom-0 w-3/4 bg-[#D9D9D9] rounded-md">
+        <div className="fixed bottom-5 w-3/4 bg-[#D9D9D9] rounded-md">
             <form className="flex items-center p-3" onSubmit={handleSubmit}>
                 <textarea
                     value={input}
@@ -38,7 +38,7 @@ const Textbar: React.FC = () => {
                 />
                 <button
                     type="submit"
-                    className="ml-2 p-2 text-blue-600 hover:text-blue-800 transition-colors duration-300"
+                    className="ml-2 p-2 text-green-600 hover:text-green-800 transition-colors duration-300"
                 >
                     <FiSend size={24} />
                 </button>
