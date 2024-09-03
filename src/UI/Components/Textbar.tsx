@@ -1,8 +1,10 @@
+import AIHandler from "@/Core/AIHandler";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { FiMessageSquare, FiSend } from "react-icons/fi";
 
 const Textbar: React.FC = () => {
     const [input, setInput] = useState("");
+    const _AIHandler = AIHandler.getInstance();
 
     // Handles input change
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -19,9 +21,23 @@ const Textbar: React.FC = () => {
     // Handles submission of input
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (input.trim()) {
-            // onSend(input.trim());
+        if (input.trim()) {    
+            _AIHandler.generateText(input.trim()).then((response) => {
+                console.log(response);
+            })
             setInput(""); // Clear input after sending
+        }
+    };
+    
+    // Handles keydown event to submit form on Enter key press
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            // Trigger the form submission
+            const form = e.currentTarget.form;
+            if (form) {
+                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
         }
     };
 
@@ -31,6 +47,7 @@ const Textbar: React.FC = () => {
                 <textarea
                     value={input}
                     onChange={handleChange}
+                    onKeyDown={handleKeyDown}
                     placeholder="Type your message..."
                     rows={1}
                     className="flex-grow border-none p-2 rounded-lg bg-transparent text-white outline-none resize-none overflow-hidden"
