@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { FiSend } from "react-icons/fi";
+import { FiMessageSquare, FiSend } from "react-icons/fi";
 
 const Textbar: React.FC = () => {
     const [input, setInput] = useState("");
@@ -26,23 +26,28 @@ const Textbar: React.FC = () => {
     };
 
     return (
-        <div className="fixed bottom-5 w-3/4 bg-[#D9D9D9] rounded-md">
+        <div className="fixed bottom-5 w-3/4 bg-transparent rounded-2xl border-[#a6a6a6] border-2">
             <form className="flex items-center p-3" onSubmit={handleSubmit}>
                 <textarea
                     value={input}
                     onChange={handleChange}
                     placeholder="Type your message..."
                     rows={1}
-                    className="flex-grow border-none p-2 rounded-lg bg-transparent text-gray-800 outline-none resize-none overflow-hidden"
+                    className="flex-grow border-none p-2 rounded-lg bg-transparent text-white outline-none resize-none overflow-hidden"
                     style={{ height: "auto", minHeight: "2.5rem" }}
                 />
                 <button
                     type="submit"
                     className="ml-2 p-2 text-green-600 hover:text-green-800 transition-colors duration-300"
+                    title="Send Message"
                 >
                     <FiSend size={24} />
                 </button>
+                <button className="ml-2 text-green-600 hover:text-green-800" title="New Chat">
+                    <FiMessageSquare size={24} />
+                </button>
             </form>
+
         </div>
     );
 };
