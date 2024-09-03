@@ -60,7 +60,7 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
                                     className={`max-w-xs p-2 rounded-lg ${
                                         isUserSent
                                             ? "bg-gray-100 text-black"
-                                            : "bg-green-600 text-white"
+                                            : "bg-green-700 text-white"
                                     }`}
                                 >
                                     {messageText}
