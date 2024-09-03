@@ -1,4 +1,5 @@
 import AIHandler from "@/Core/AIHandler";
+import { SubmitChatMessageEvent } from "@/Core/ChatEvents";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { FiMessageSquare, FiSend } from "react-icons/fi";
 
@@ -21,14 +22,24 @@ const Textbar: React.FC = () => {
     // Handles submission of input
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (input.trim()) {    
+
+        // check if there is internet if not then return
+        if (!navigator.onLine) {
+            console.error(
+                "No internet connection. Please check your connection and try again.",
+            );
+            return;
+        }
+
+        if (input.trim()) {
+            new SubmitChatMessageEvent(input.trim(), true).Dispatch();
             _AIHandler.generateText(input.trim()).then((response) => {
-                console.log(response);
-            })
+                new SubmitChatMessageEvent(response, false).Dispatch();
+            });
             setInput(""); // Clear input after sending
         }
     };
-    
+
     // Handles keydown event to submit form on Enter key press
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
@@ -36,7 +47,9 @@ const Textbar: React.FC = () => {
             // Trigger the form submission
             const form = e.currentTarget.form;
             if (form) {
-                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                form.dispatchEvent(
+                    new Event("submit", { cancelable: true, bubbles: true }),
+                );
             }
         }
     };
@@ -60,11 +73,13 @@ const Textbar: React.FC = () => {
                 >
                     <FiSend size={24} />
                 </button>
-                <button className="ml-2 text-green-600 hover:text-green-800" title="New Chat">
+                <button
+                    className="ml-2 text-green-600 hover:text-green-800"
+                    title="New Chat"
+                >
                     <FiMessageSquare size={24} />
                 </button>
             </form>
-
         </div>
     );
 };
