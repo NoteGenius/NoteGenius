@@ -1,25 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconButton, Collapse, Box } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from '@mui/icons-material';
-import { CardHandler, Card } from '@/Core/CardHandler';
 import RecentHistoryCard from './RecentHistoryCard'; // Adjust the import path as necessary
+import { useChat } from '@/Core/ChatContext';
 
 const RecentHistoryDropdown = () => {
     const [open, setOpen] = useState(false);
-    const [cards, setCards] = useState<Card[]>([]);
-    const cardHandlerRef = useRef<CardHandler | null>(null);
+    const [cardLength, setCardLength] = useState(0);
+    const { cardHandler } = useChat();
 
-    // Initialize card handler when component mounts
+    // Update card length and re-render when the card length changes
     useEffect(() => {
-        if (cardHandlerRef.current === null) {
-            cardHandlerRef.current = new CardHandler();
-            setCards(cardHandlerRef.current.getCards());
-        }
+        if (cardHandler) {
+            setCardLength(cardHandler.getCards().length);
 
-        return () => {
-            cardHandlerRef.current?.saveCards();
-        };
-    }, []);
+            const interval = setInterval(() => {
+                const currentLength = cardHandler.getCards().length;
+                if (currentLength !== cardLength) {
+                    setCardLength(currentLength);
+                }
+            }, 1000); // Check every second
+
+            return () => clearInterval(interval); // Cleanup the interval on component unmount
+        }
+    }, [cardHandler, cardLength]);
 
     // Toggle dropdown
     const handleToggle = () => {
@@ -29,16 +33,16 @@ const RecentHistoryDropdown = () => {
     return (
         <Box sx={{ position: 'fixed', right: 0, margin: '20px', width: '300px' }}>
             <Box sx={{cursor: 'pointer' }} className="flex justify-center items-center h-full" onClick={handleToggle}>
-                <div className="text-green-500 font-bold text-xl text-center">
+                <IconButton className="drop-shadow-[0_0_8px_rgba(255,255,255,1)]">
+                    {open ? <ExpandMoreIcon className="text-white" /> : <ExpandLessIcon className="text-white" />}
+                </IconButton>
+                <div className="text-green-500 font-bold text-xl text-center drop-shadow-[0_0_8px_rgba(0,255,0,1)]">
                     Recent History
                 </div>
-                <IconButton>
-                    {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </IconButton>
             </Box>
             <Collapse in={open}>
                 <Box sx={{ mt: 2 }}>
-                    {cards.map((card, index) => (
+                    {cardHandler?.getCards().map((card, index) => (
                         <RecentHistoryCard key={index} card={card} />
                     ))}
                 </Box>
