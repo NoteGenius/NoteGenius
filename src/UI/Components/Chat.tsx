@@ -39,6 +39,7 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
     }, []);
 
     const onWindowResize = useCallback(() => {
+        console.log(window.innerWidth);
         setWindowSize({
             width: window.innerWidth,
             height: window.innerHeight,
@@ -58,9 +59,10 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
             SubmitChatMessageEvent.Listen(onChatMessageSent);
             TextbarResizeEvent.Listen(onTextbarResize);
 
-            window.addEventListener("resize", onWindowResize);
             isMounted.current = true;
         }
+
+        window.addEventListener("resize", onWindowResize);
 
         return () => {
             SubmitChatMessageEvent.RemoveListener(onChatMessageSent);
@@ -76,9 +78,9 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
             {/* On mobile, move the chat to the top */}
             <div
                 ref={chatWindowRef}
-                className="w-full sm:w-[70vw] sm-h-auto bg-transparent rounded-lg overflow-y-scroll p-4 scrollbar-custom"
+                className="w-full md:w-3/4 sm-h-auto bg-transparent rounded-lg overflow-y-scroll p-4 scrollbar-custom"
                 style={
-                    window.innerWidth >= 640
+                    window.innerWidth >= 768
                         ? { height: `calc(90vh - ${textbarHeight + 60}px)` }
                         : { height: `calc(100vh - ${textbarHeight + 50}px)` }
                 }
