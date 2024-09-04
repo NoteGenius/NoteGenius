@@ -1,8 +1,11 @@
+import AIHandler from "@/Core/AIHandler";
+import { SubmitChatMessageEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { FiMessageSquare, FiSend } from "react-icons/fi";
 
 const Textbar: React.FC = () => {
     const [input, setInput] = useState("");
+    const _AIHandler = AIHandler.getInstance();
 
     // Handles input change
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -13,15 +16,45 @@ const Textbar: React.FC = () => {
         const maxHeight = textareaLineHeight * 5; // Max height for 5 lines
 
         e.target.style.height = "inherit";
-        e.target.style.height = `${Math.min(e.target.scrollHeight, maxHeight)}px`;
+        const newHeight = Math.min(e.target.scrollHeight, maxHeight);
+        e.target.style.height = `${newHeight}px`;
+
+        // Dispatch the TextbarResizeEvent with the new height so the chat component can adjust
+        new TextbarResizeEvent(newHeight).Dispatch();
     };
 
     // Handles submission of input
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        // check if there is internet if not then return
+        if (!navigator.onLine) {
+            console.error(
+                "No internet connection. Please check your connection and try again.",
+            );
+            return;
+        }
+
         if (input.trim()) {
-            // onSend(input.trim());
+            new SubmitChatMessageEvent(input.trim(), true).Dispatch();
+            _AIHandler.generateText(input.trim()).then((response) => {
+                new SubmitChatMessageEvent(response, false).Dispatch();
+            });
             setInput(""); // Clear input after sending
+        }
+    };
+
+    // Handles keydown event to submit form on Enter key press
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            // Trigger the form submission
+            const form = e.currentTarget.form;
+            if (form) {
+                form.dispatchEvent(
+                    new Event("submit", { cancelable: true, bubbles: true }),
+                );
+            }
         }
     };
 
@@ -31,6 +64,7 @@ const Textbar: React.FC = () => {
                 <textarea
                     value={input}
                     onChange={handleChange}
+                    onKeyDown={handleKeyDown}
                     placeholder="Type your message..."
                     rows={1}
                     className="flex-grow border-none p-2 rounded-lg bg-transparent text-white outline-none resize-none overflow-hidden"
@@ -43,11 +77,13 @@ const Textbar: React.FC = () => {
                 >
                     <FiSend size={24} />
                 </button>
-                <button className="ml-2 text-green-600 hover:text-green-800" title="New Chat">
+                <button
+                    className="ml-2 text-green-600 hover:text-green-800"
+                    title="New Chat"
+                >
                     <FiMessageSquare size={24} />
                 </button>
             </form>
-
         </div>
     );
 };
