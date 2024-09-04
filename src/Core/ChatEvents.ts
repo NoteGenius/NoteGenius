@@ -45,7 +45,9 @@ export class TextbarResizeEvent extends Event {
         });
     }
 
-    public static RemoveListener(callback: (event: TextbarResizeEvent) => void) {
+    public static RemoveListener(
+        callback: (event: TextbarResizeEvent) => void,
+    ) {
         window.removeEventListener("TextbarResize", (event: Event) => {
             callback(event as TextbarResizeEvent);
         });

@@ -14,13 +14,14 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
-      });
+    });
 
     const scrollToBottom = () => {
         if (chatWindowRef.current) {
-            chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+            chatWindowRef.current.scrollTop =
+                chatWindowRef.current.scrollHeight;
         }
-    }
+    };
 
     // Callback for when messages are sent by user
     const onChatMessageSent = useCallback(
@@ -56,7 +57,7 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
         if (!isMounted.current) {
             SubmitChatMessageEvent.Listen(onChatMessageSent);
             TextbarResizeEvent.Listen(onTextbarResize);
-            
+
             window.addEventListener("resize", onWindowResize);
             isMounted.current = true;
         }
@@ -70,11 +71,17 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
     }, [onChatMessageSent, onTextbarResize, onWindowResize]);
 
     return (
-        <div className="fixed inset-0 md:top-[100px] top-0 flex justify-center sm:justify-center"> {/* On mobile, move the chat to the top */}
+        <div className="fixed inset-0 md:top-[100px] top-0 flex justify-center sm:justify-center">
+            {" "}
+            {/* On mobile, move the chat to the top */}
             <div
                 ref={chatWindowRef}
                 className="w-full sm:w-[70vw] sm-h-auto bg-transparent rounded-lg shadow-lg overflow-y-scroll p-4 scrollbar-custom"
-                style={window.innerWidth >= 640 ? { height: `calc(91vh - ${textbarHeight + 60}px)` } : { height: `calc(100vh - ${textbarHeight + 50}px)` }}
+                style={
+                    window.innerWidth >= 640
+                        ? { height: `calc(91vh - ${textbarHeight + 60}px)` }
+                        : { height: `calc(100vh - ${textbarHeight + 50}px)` }
+                }
             >
                 {Array.from(card.chats.entries()).map(
                     ([messageInfo, messageText], index) => {
@@ -87,14 +94,16 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
                             >
                                 <div
                                     className={`p-2 rounded-lg ${
-                                        isUserSent ? "bg-gray-100 text-black" : "bg-green-700 text-white"
+                                        isUserSent
+                                            ? "bg-gray-100 text-black"
+                                            : "bg-green-700 text-white"
                                     } max-w-[100%] sm:max-w-[60%] lg:max-w-[50%] break-words overflow-hidden`}
                                 >
                                     {messageText}
                                 </div>
                             </div>
                         );
-                    }
+                    },
                 )}
             </div>
         </div>
@@ -102,4 +111,3 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
 };
 
 export default Chat;
-
