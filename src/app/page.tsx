@@ -31,10 +31,10 @@ export default function Home() {
     return (
         <main className="flex items-center justify-center h-screen bg-gradient-to-t from-gray-custom-light to-gray-custom">
             <ChatProvider>
-                <Topbar />
                 <Chat card={chat} />
                 <Textbar />
                 <RecentHistoryDropdown />
+                <Topbar />
             </ChatProvider>
         </main>
     );

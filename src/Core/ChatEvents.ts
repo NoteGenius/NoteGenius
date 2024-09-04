@@ -26,3 +26,28 @@ export class SubmitChatMessageEvent extends Event {
         });
     }
 }
+
+export class TextbarResizeEvent extends Event {
+    public height: number;
+
+    constructor(height: number) {
+        super("TextbarResize", { bubbles: true, cancelable: true });
+        this.height = height;
+    }
+
+    public Dispatch() {
+        window.dispatchEvent(this);
+    }
+
+    public static Listen(callback: (event: TextbarResizeEvent) => void) {
+        window.addEventListener("TextbarResize", (event: Event) => {
+            callback(event as TextbarResizeEvent);
+        });
+    }
+
+    public static RemoveListener(callback: (event: TextbarResizeEvent) => void) {
+        window.removeEventListener("TextbarResize", (event: Event) => {
+            callback(event as TextbarResizeEvent);
+        });
+    }
+}

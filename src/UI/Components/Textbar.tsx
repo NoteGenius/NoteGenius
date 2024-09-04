@@ -1,5 +1,5 @@
 import AIHandler from "@/Core/AIHandler";
-import { SubmitChatMessageEvent } from "@/Core/ChatEvents";
+import { SubmitChatMessageEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { FiMessageSquare, FiSend } from "react-icons/fi";
 
@@ -16,7 +16,11 @@ const Textbar: React.FC = () => {
         const maxHeight = textareaLineHeight * 5; // Max height for 5 lines
 
         e.target.style.height = "inherit";
-        e.target.style.height = `${Math.min(e.target.scrollHeight, maxHeight)}px`;
+        const newHeight = Math.min(e.target.scrollHeight, maxHeight);
+        e.target.style.height = `${newHeight}px`;
+
+        // Dispatch the TextbarResizeEvent with the new height so the chat component can adjust
+        new TextbarResizeEvent(newHeight).Dispatch();
     };
 
     // Handles submission of input

@@ -10,7 +10,7 @@ const Topbar: React.FC = () => {
         <div>
             {/* transitioning hamburger button (for mobile devices*/}
             <nav
-                className={`navbar ${isOpen ? "open" : ""} md:hidden fixed top-0 right-0 m-4`}
+                className={`navbar ${isOpen ? "open" : ""} md:hidden fixed top-0 right-0 m-4 drop-shadow-[0_0_8px_rgba(0,255,0,1)]`}
             >
                 <button onClick={() => setIsOpen(!isOpen)}>
                     <img

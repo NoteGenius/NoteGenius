@@ -33,10 +33,10 @@ const RecentHistoryDropdown = () => {
     return (
         <Box className="hidden md:block fixed m-20px w-300px right-4 top-28">
             <Box sx={{cursor: 'pointer' }} className="flex justify-center items-center h-full" onClick={handleToggle}>
-                <IconButton className="drop-shadow-[0_0_8px_rgba(255,255,255,1)]">
+                <IconButton className="drop-shadow-[0_0_8px_rgba(0,255,0,1)]">
                     {open ? <ExpandMoreIcon className="text-white" /> : <ExpandLessIcon className="text-white" />}
                 </IconButton>
-                <div className="text-green-500 font-bold text-xl text-center drop-shadow-[0_0_8px_rgba(0,255,0,1)]">
+                <div className="text-white font-bold text-xl text-center drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">
                     Recent History
                 </div>
             </Box>
