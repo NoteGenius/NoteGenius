@@ -43,11 +43,13 @@ const Textbar: React.FC = () => {
                 >
                     <FiSend size={24} />
                 </button>
-                <button className="ml-2 text-green-600 hover:text-green-800" title="New Chat">
+                <button
+                    className="ml-2 text-green-600 hover:text-green-800"
+                    title="New Chat"
+                >
                     <FiMessageSquare size={24} />
                 </button>
             </form>
-
         </div>
     );
 };

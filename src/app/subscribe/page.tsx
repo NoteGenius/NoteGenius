@@ -1,5 +1,5 @@
-import "@/UI/style/bubble.css";
-import "@/UI/style/grid.css";
+import "@/UI/Style/bubble.css";
+import "@/UI/Style/grid.css";
 
 export default function SettingsPage() {
     return (

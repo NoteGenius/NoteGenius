@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card } from '@/Core/CardHandler'; 
+import React from "react";
+import { Card } from "@/Core/CardHandler";
 
 interface RecentHistoryCardProps {
     card: Card;

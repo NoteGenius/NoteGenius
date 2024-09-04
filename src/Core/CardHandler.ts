@@ -1,5 +1,4 @@
 class CardHandler {
-
     // holds all the cards informatoin
     private _cards: Card[] = [];
 
@@ -9,19 +8,24 @@ class CardHandler {
 
     // retrieves all the stored cards information from local storage
     public retrieveCards() {
-        const storedCards = localStorage.getItem('cards');
+        const storedCards = localStorage.getItem("cards");
         if (storedCards) {
             const parsedCards = JSON.parse(storedCards);
-            this._cards = parsedCards.map((cardData: any) => new Card(
-                cardData._chats.map((chatData: any) => new Map(chatData)),
-                cardData._title
-            ));
+            this._cards = parsedCards.map(
+                (cardData: any) =>
+                    new Card(
+                        cardData._chats.map(
+                            (chatData: any) => new Map(chatData),
+                        ),
+                        cardData._title,
+                    ),
+            );
         }
     }
 
     // saves all the stored cards information to local storage
     public saveCards(): void {
-        localStorage.setItem('cards', JSON.stringify(this._cards));
+        localStorage.setItem("cards", JSON.stringify(this._cards));
     }
 
     // Adds a new card to the list and saves it
@@ -40,9 +44,8 @@ class CardHandler {
     public getCards(): Card[] {
         return this._cards;
     }
-    
 }
- 
+
 // Object for each card that holds their information
 class Card {
     private _chats: Map<MessageInfo, String>[];
