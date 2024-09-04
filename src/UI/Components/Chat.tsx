@@ -49,7 +49,7 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
     useEffect(() => {
         scrollToBottom();
 
-        // forcing re-render when message count changes
+        // forcing re-render when any of these values change
     }, [messageCount, textbarHeight, windowSize]);
 
     // Add and remove event listeners for chat message and textbar resize
@@ -76,10 +76,10 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
             {/* On mobile, move the chat to the top */}
             <div
                 ref={chatWindowRef}
-                className="w-full sm:w-[70vw] sm-h-auto bg-transparent rounded-lg shadow-lg overflow-y-scroll p-4 scrollbar-custom"
+                className="w-full sm:w-[70vw] sm-h-auto bg-transparent rounded-lg overflow-y-scroll p-4 scrollbar-custom"
                 style={
                     window.innerWidth >= 640
-                        ? { height: `calc(91vh - ${textbarHeight + 60}px)` }
+                        ? { height: `calc(90vh - ${textbarHeight + 60}px)` }
                         : { height: `calc(100vh - ${textbarHeight + 50}px)` }
                 }
             >
