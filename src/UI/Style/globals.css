@@ -31,3 +31,14 @@ body {
         text-wrap: balance;
     }
 }
+
+/* Custom scrollbar */
+.scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: #949494; /* Thumb color */
+    border-radius: 10px;
+    border: 2px solid transparent; /* Ensures thumb shape */
+}

@@ -48,8 +48,9 @@ class CardHandler {
 
 // Object for each card that holds their information
 class Card {
-    private _chats: Map<MessageInfo, String>[];
+    private _chats: Map<MessageInfo, String>;
     private _title: string;
+    private _currentId: number;
 
     public get title(): string {
         return this._title;
@@ -59,18 +60,20 @@ class Card {
         this._title = newTitle;
     }
 
-    public get chats(): Map<MessageInfo, String>[] {
+    public get chats(): Map<MessageInfo, String> {
         return this._chats;
     }
 
-    constructor(chats?: Map<MessageInfo, String>[], title?: string) {
-        this._chats = chats || [];
+    constructor(chats?: Map<MessageInfo, String>, title?: string) {
+        this._chats = chats || new Map<MessageInfo, String>();
         this._title = title || "untitled";
+        this._currentId = 0;
     }
 
     public addChat(message: string, userSent: boolean) {
-        const chat = new Map<MessageInfo, String>();
-        this._chats.push(chat);
+        const info = new MessageInfo(this._currentId, userSent);
+        this._chats.set(info, message);
+        this._currentId++;
     }
 }
 
