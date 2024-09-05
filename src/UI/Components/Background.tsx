@@ -4,7 +4,7 @@ import "@/UI/Style/grid.css";
 
 const Background = () => {
     return (
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-custom-light to-gray-custom grid-pattern z-[-1]">
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-custom-light to-gray-custom grid-pattern z-[-1] overflow-hidden">
             {/* Static Green Blob 1 - Top Left */}
             <div className="blob top-[-20px] left-[-150px] hidden lg:block"></div>
 
