@@ -33,7 +33,6 @@ class CardHandler {
 
     // Retrieves all the stored cards information from local storage
     public retrieveCards() {
-        if (typeof window === "undefined") return; // return if localstorage is not available
         const storedCards = localStorage.getItem("cards");
         if (storedCards) {
             const parsedCards = JSON.parse(storedCards);
@@ -55,7 +54,6 @@ class CardHandler {
 
     // Saves all the stored cards information to local storage
     public saveCards(): void {
-        if (typeof window === "undefined") return; // return if localstorage is not available
         const cardsToSave = this._cards.map((card) => ({
             _chats: Array.from(card.chats.entries()), // Convert Map to an array of entries
             _title: card.title,

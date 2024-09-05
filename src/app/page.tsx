@@ -13,7 +13,6 @@ export default function Home() {
 
     // saving the cards when closing
     useEffect(() => {
-        if (typeof window === "undefined") return; // returning if there is no window open
         window.addEventListener("beforeunload", () =>
             CardHandler.getInstance().saveCards(),
         );
