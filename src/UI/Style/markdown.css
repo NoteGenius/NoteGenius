@@ -1,0 +1,13 @@
+.prose ol > li::marker {
+  color: white; /* Changes the color of the numbers to white */
+}
+
+
+.custom-markdown ol {
+    color: white; /* Set the list numbers to white */ 
+}
+
+.custom-markdown strong {
+    color: white; /* Set bold text to white */
+    font-weight: bold; /* Ensure boldness */
+}
