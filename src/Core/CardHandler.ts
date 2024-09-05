@@ -19,7 +19,6 @@ class CardHandler {
     
     constructor() {
         this.retrieveCards();
-        console.log(this._cards);
         this._currentCard = new Card();
     }
 
