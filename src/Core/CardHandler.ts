@@ -1,31 +1,59 @@
+import AIHandler from "./AIHandler";
+
 class CardHandler {
+    private static instance: CardHandler;
+
     // holds all the cards informatoin
     private _cards: Card[] = [];
+    private _currentCard: Card;
 
+    public get currentCard(): Card {
+        return this._currentCard;
+    }
+    
     constructor() {
         this.retrieveCards();
+        this._currentCard = new Card();
+        this.currentCard.addChat("Hello! I'm a chatbot. How can I help you today?", true);
     }
 
-    // retrieves all the stored cards information from local storage
+    /** Retreives the current instance of the CardHandler */
+    public static getInstance(): CardHandler {
+        if (!CardHandler.instance) {
+            CardHandler.instance = new CardHandler();
+        }
+
+        return CardHandler.instance;
+    }
+
+    // Retrieves all the stored cards information from local storage
     public retrieveCards() {
         const storedCards = localStorage.getItem("cards");
         if (storedCards) {
             const parsedCards = JSON.parse(storedCards);
-            this._cards = parsedCards.map(
-                (cardData: any) =>
-                    new Card(
-                        cardData._chats.map(
-                            (chatData: any) => new Map(chatData),
-                        ),
-                        cardData._title,
-                    ),
-            );
+
+            // Convert parsed JSON back to a Map<MessageInfo, string>
+            this._cards = parsedCards.map((cardData: any) => {
+                // Convert the array of entries back to a Map
+                const chatEntries = Array.isArray(cardData._chats) 
+                    ? cardData._chats.map(
+                        ([key, value]: [any, string]) => [new MessageInfo(key._id, key._userSent), value]
+                    )
+                    : []; // If _chats is not an array, fallback to an empty array to prevent errors
+
+                return new Card(new Map(chatEntries), cardData._title);
+            });
         }
     }
 
-    // saves all the stored cards information to local storage
+    // Saves all the stored cards information to local storage
     public saveCards(): void {
-        localStorage.setItem("cards", JSON.stringify(this._cards));
+        const cardsToSave = this._cards.map(card => ({
+            _chats: Array.from(card.chats.entries()), // Convert Map to an array of entries
+            _title: card.title,
+        }));
+
+        localStorage.setItem("cards", JSON.stringify(cardsToSave));
     }
 
     // Adds a new card to the list and saves it
@@ -70,9 +98,16 @@ class Card {
         this._currentId = 0;
     }
 
-    public addChat(message: string, userSent: boolean) {
+    public async addChat(message: string, userSent: boolean) {
         const info = new MessageInfo(this._currentId, userSent);
         this._chats.set(info, message);
+
+        // adding the card to recent history once there is a message sent
+        if (this._currentId === 0) {
+            this._title = await AIHandler.getInstance().generateCardTitle(Array.from(this._chats.values()))
+            CardHandler.getInstance().addCard(this);
+        }
+
         this._currentId++;
     }
 }

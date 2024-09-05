@@ -8,30 +8,10 @@ import Topbar from "@/UI/Components/Topbar";
 
 /** Main page code */
 export default function Home() {
-    const chat = new Card();
-    chat.addChat("hi2", true);
-    chat.addChat("hi", false);
-    chat.addChat("hi", true);
-    chat.addChat("hi", false);
-    chat.addChat("hi", true);
-    chat.addChat("hi", false);
-    chat.addChat("hi", true);
-    chat.addChat("hi", false);
-    chat.addChat("hi", true);
-    chat.addChat("hi", false);
-    chat.addChat("hi", true);
-    chat.addChat("hi", false);
-    chat.addChat("hi", true);
-    chat.addChat("hi", false);
-    chat.addChat("hi", true);
-    chat.addChat("hi", false);
-    chat.addChat("hi", true);
-    chat.addChat("hi", false);
-
     return (
         <main className="flex items-center justify-center h-screen bg-gradient-to-t from-gray-custom-light to-gray-custom">
             <ChatProvider>
-                <Chat card={chat} />
+                <Chat />
                 <Textbar />
                 <RecentHistoryDropdown />
                 <Topbar />

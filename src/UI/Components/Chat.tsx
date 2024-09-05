@@ -1,15 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Card } from "@/Core/CardHandler";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Card, CardHandler } from "@/Core/CardHandler";
 import { SubmitChatMessageEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
 
-interface ChatProps {
-    card: Card;
-}
-
-const Chat: React.FC<ChatProps> = ({ card }) => {
+const Chat: React.FC = () => {
     const isMounted = useRef(false);
     const chatWindowRef = useRef<HTMLDivElement>(null);
-    const [messageCount, setMessageCount] = useState(card.chats.size); // tracks number of messages for re-render
+    const cardHandler = CardHandler.getInstance();
+
+    const [messageCount, setMessageCount] = useState(cardHandler.currentCard.chats.size); // tracks number of messages for re-render
     const [textbarHeight, setTextbarHeight] = useState(40); // Default height of the text bar
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
@@ -26,10 +24,10 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
     // Callback for when messages are sent by user
     const onChatMessageSent = useCallback(
         (e: SubmitChatMessageEvent) => {
-            card.addChat(e.message, e.userSent);
-            setMessageCount(card.chats.size); // Update message count to force re-render
+            cardHandler.currentCard.addChat(e.message, e.userSent);
+            setMessageCount(cardHandler.currentCard.chats.size); // Update message count to force re-render
         },
-        [card],
+        [cardHandler.currentCard],
     );
 
     // Adjust chat height based on the textbar resize
@@ -39,7 +37,6 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
     }, []);
 
     const onWindowResize = useCallback(() => {
-        console.log(window.innerWidth);
         setWindowSize({
             width: window.innerWidth,
             height: window.innerHeight,
@@ -85,7 +82,7 @@ const Chat: React.FC<ChatProps> = ({ card }) => {
                         : { height: `calc(100vh - ${textbarHeight + 50}px)` }
                 }
             >
-                {Array.from(card.chats.entries()).map(
+                {Array.from(cardHandler.currentCard.chats.entries()).map(
                     ([messageInfo, messageText], index) => {
                         const isUserSent = messageInfo.userSent;
 
