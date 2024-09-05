@@ -22,7 +22,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
     useEffect(() => {
         if (cardHandlerRef.current === null)
-            cardHandlerRef.current = new CardHandler();
+            cardHandlerRef.current = CardHandler.getInstance(); // Initialize card handler
         setIsInitialized(true); // Set initialization as complete
     }, []);
 
