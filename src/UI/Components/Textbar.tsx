@@ -60,8 +60,8 @@ const Textbar: React.FC = () => {
     };
 
     const handleNewChat = () => {
-        CardHandler.getInstance().currentCard = new Card()
-    }
+        CardHandler.getInstance().currentCard = new Card();
+    };
 
     return (
         <div className="fixed bottom-5 w-3/4 bg-transparent rounded-2xl border-[#a6a6a6] border-2">

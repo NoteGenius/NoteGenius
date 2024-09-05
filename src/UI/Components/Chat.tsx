@@ -1,6 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { CardHandler } from "@/Core/CardHandler";
-import { SubmitChatMessageEvent, SwitchCurrentChatEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
+import {
+    SubmitChatMessageEvent,
+    SwitchCurrentChatEvent,
+    TextbarResizeEvent,
+} from "@/Core/ChatEvents";
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // Adds GitHub-flavored markdown (lists, tables)
@@ -12,7 +22,7 @@ const Chat: React.FC = () => {
 
     const cardHandler = CardHandler.getInstance();
     const [forceRender, setForceRender] = useState(false);
-    
+
     const [textbarHeight, setTextbarHeight] = useState(40); // Default height of the text bar
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
@@ -78,7 +88,12 @@ const Chat: React.FC = () => {
 
             window.removeEventListener("resize", onWindowResize);
         };
-    }, [onChatMessageSent, onSwitchCurrentChat, onTextbarResize, onWindowResize]);
+    }, [
+        onChatMessageSent,
+        onSwitchCurrentChat,
+        onTextbarResize,
+        onWindowResize,
+    ]);
 
     return (
         <div className="fixed inset-0 md:top-[100px] top-0 flex justify-center sm:justify-center">
@@ -95,23 +110,26 @@ const Chat: React.FC = () => {
                     ([messageInfo, messageText], index) => {
                         const isUserSent = messageInfo.userSent;
 
-                    return (
-                        <div
-                            key={index}
-                            className={`flex ${isUserSent ? "justify-end" : "justify-start"} mb-4`}
-                        >
+                        return (
                             <div
-                                className={`p-4 rounded-lg ${
-                                    isUserSent ? "bg-gray-100 text-black" : "bg-green-700 text-white"
-                                } max-w-[100%] sm:max-w-[60%] lg:max-w-[85%] break-words overflow-hidden prose custom-markdown`}
+                                key={index}
+                                className={`flex ${isUserSent ? "justify-end" : "justify-start"} mb-4`}
                             >
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {messageText.toString()}
-                                </ReactMarkdown>
+                                <div
+                                    className={`p-4 rounded-lg ${
+                                        isUserSent
+                                            ? "bg-gray-100 text-black"
+                                            : "bg-green-700 text-white"
+                                    } max-w-[100%] sm:max-w-[60%] lg:max-w-[85%] break-words overflow-hidden prose custom-markdown`}
+                                >
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                        {messageText.toString()}
+                                    </ReactMarkdown>
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    },
+                )}
             </div>
         </div>
     );
