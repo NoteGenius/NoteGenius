@@ -53,3 +53,25 @@ export class TextbarResizeEvent extends Event {
         });
     }
 }
+
+export class SwitchCurrentChatEvent extends Event {
+    constructor() {
+        super("SwitchCurrentChat", { bubbles: true, cancelable: true });
+    }
+
+    public Dispatch() {
+        window.dispatchEvent(this);
+    }
+
+    public static Listen(callback: () => void) {
+        window.addEventListener("SwitchCurrentChat", (event: Event) => {
+            callback();
+        });
+    }
+
+    public static RemoveListener(callback: () => void) {
+        window.removeEventListener("SwitchCurrentChat", (event: Event) => {
+            callback();
+        });
+    }
+}

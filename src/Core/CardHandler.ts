@@ -1,4 +1,5 @@
 import AIHandler from "./AIHandler";
+import { SwitchCurrentChatEvent } from "./ChatEvents";
 
 class CardHandler {
     private static instance: CardHandler;
@@ -10,11 +11,16 @@ class CardHandler {
     public get currentCard(): Card {
         return this._currentCard;
     }
+
+    public set currentCard(newCard: Card) {
+        this._currentCard = newCard;
+        new SwitchCurrentChatEvent().Dispatch();
+    }
     
     constructor() {
         this.retrieveCards();
+        console.log(this._cards);
         this._currentCard = new Card();
-        this.currentCard.addChat("Hello! I'm a chatbot. How can I help you today?", true);
     }
 
     /** Retreives the current instance of the CardHandler */
@@ -96,6 +102,10 @@ class Card {
         this._chats = chats || new Map<MessageInfo, String>();
         this._title = title || "untitled";
         this._currentId = 0;
+
+        if (this._chats.size > 0) {
+            this._currentId = Math.max(...Array.from(this._chats.keys()).map(info => info.id)) + 1;
+        }
     }
 
     public async addChat(message: string, userSent: boolean) {

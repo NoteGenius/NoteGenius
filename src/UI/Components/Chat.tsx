@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardHandler } from "@/Core/CardHandler";
-import { SubmitChatMessageEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
+import { SubmitChatMessageEvent, SwitchCurrentChatEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
 
 const Chat: React.FC = () => {
     const isMounted = useRef(false);
     const chatWindowRef = useRef<HTMLDivElement>(null);
+
     const cardHandler = CardHandler.getInstance();
+    const [ currentCard, setCurrentCard ] = useState(cardHandler.currentCard);
 
     const [messageCount, setMessageCount] = useState(cardHandler.currentCard.chats.size); // tracks number of messages for re-render
     const [textbarHeight, setTextbarHeight] = useState(40); // Default height of the text bar
@@ -24,10 +26,10 @@ const Chat: React.FC = () => {
     // Callback for when messages are sent by user
     const onChatMessageSent = useCallback(
         (e: SubmitChatMessageEvent) => {
-            cardHandler.currentCard.addChat(e.message, e.userSent);
-            setMessageCount(cardHandler.currentCard.chats.size); // Update message count to force re-render
+            currentCard.addChat(e.message, e.userSent);
+            setMessageCount(currentCard.chats.size); // Update message count to force re-render
         },
-        [cardHandler.currentCard],
+        [currentCard],
     );
 
     // Adjust chat height based on the textbar resize
@@ -43,18 +45,24 @@ const Chat: React.FC = () => {
         });
     }, []);
 
+    const onSwitchCurrentChat = useCallback(() => {
+        setCurrentCard(cardHandler.currentCard);
+        setMessageCount(cardHandler.currentCard.chats.size);
+    }, [cardHandler.currentCard]);
+
     // Scroll to the bottom when the component mounts or when chats change
     useEffect(() => {
         scrollToBottom();
 
         // forcing re-render when any of these values change
-    }, [messageCount, textbarHeight, windowSize]);
+    }, [messageCount, textbarHeight, windowSize, currentCard]);
 
     // Add and remove event listeners for chat message and textbar resize
     useEffect(() => {
         if (!isMounted.current) {
             SubmitChatMessageEvent.Listen(onChatMessageSent);
             TextbarResizeEvent.Listen(onTextbarResize);
+            SwitchCurrentChatEvent.Listen(onSwitchCurrentChat);
 
             isMounted.current = true;
         }
@@ -64,10 +72,11 @@ const Chat: React.FC = () => {
         return () => {
             SubmitChatMessageEvent.RemoveListener(onChatMessageSent);
             TextbarResizeEvent.RemoveListener(onTextbarResize);
+            SwitchCurrentChatEvent.RemoveListener(onSwitchCurrentChat);
 
             window.removeEventListener("resize", onWindowResize);
         };
-    }, [onChatMessageSent, onTextbarResize, onWindowResize]);
+    }, [onChatMessageSent, onSwitchCurrentChat, onTextbarResize, onWindowResize]);
 
     return (
         <div className="fixed inset-0 md:top-[100px] top-0 flex justify-center sm:justify-center">
@@ -82,7 +91,7 @@ const Chat: React.FC = () => {
                         : { height: `calc(100vh - ${textbarHeight + 50}px)` }
                 }
             >
-                {Array.from(cardHandler.currentCard.chats.entries()).map(
+                {Array.from(currentCard.chats.entries()).map(
                     ([messageInfo, messageText], index) => {
                         const isUserSent = messageInfo.userSent;
 
