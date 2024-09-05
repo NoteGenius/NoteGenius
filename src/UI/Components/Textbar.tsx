@@ -1,4 +1,5 @@
 import AIHandler from "@/Core/AIHandler";
+import { Card, CardHandler } from "@/Core/CardHandler";
 import { SubmitChatMessageEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { FiMessageSquare, FiSend } from "react-icons/fi";
@@ -58,6 +59,10 @@ const Textbar: React.FC = () => {
         }
     };
 
+    const handleNewChat = () => {
+        CardHandler.getInstance().currentCard = new Card()
+    }
+
     return (
         <div className="fixed bottom-5 w-3/4 bg-transparent rounded-2xl border-[#a6a6a6] border-2">
             <form className="flex items-center p-3" onSubmit={handleSubmit}>
@@ -79,6 +84,7 @@ const Textbar: React.FC = () => {
                 </button>
                 <button
                     className="ml-2 text-green-600 hover:text-green-800"
+                    onClick={handleNewChat}
                     title="New Chat"
                 >
                     <FiMessageSquare size={24} />

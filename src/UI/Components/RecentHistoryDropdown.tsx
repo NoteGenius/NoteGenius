@@ -34,7 +34,7 @@ const RecentHistoryDropdown = () => {
     };
 
     return (
-        <Box className="hidden md:block fixed m-20px w-300px right-4 top-28">
+        <Box className="hidden md:block fixed m-20px w-[300px] right-4 top-28">
             <Box
                 sx={{ cursor: "pointer" }}
                 className="flex justify-center items-center h-full"
@@ -52,7 +52,7 @@ const RecentHistoryDropdown = () => {
                 </div>
             </Box>
             <Collapse in={open}>
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ mt: 2 }} className="flex flex-col space-y-2 w-full max-w-[300px] mx-auto">
                     {cardHandler
                         ?.getCards()
                         .map((card, index) => (
