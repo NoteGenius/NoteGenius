@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IconButton, Collapse, Box } from "@mui/material";
 import {
     ExpandMore as ExpandMoreIcon,
@@ -6,32 +6,46 @@ import {
 } from "@mui/icons-material";
 import RecentHistoryCard from "./RecentHistoryCard"; // Adjust the import path as necessary
 import { CardHandler } from "@/Core/CardHandler";
+import { AddCardEvent } from "@/Core/ChatEvents";
 
+/**
+ * Dropdown component for displaying recent history cards on the top right of the screen.
+ * This component is only visible on larger screens (md and up).
+ */
 const RecentHistoryDropdown = () => {
+    const isMounted = useRef(false);
+    const [forceRender, setForceRender] = useState(false);
+
     const [open, setOpen] = useState(false);
-    const [cardLength, setCardLength] = useState(0);
     const cardHandler = CardHandler.GetInstance();
 
-    // Update card length and re-render when the card length changes
-    useEffect(() => {
-        if (cardHandler) {
-            setCardLength(cardHandler.cards.length);
-
-            const interval = setInterval(() => {
-                const currentLength = cardHandler.cards.length;
-                if (currentLength !== cardLength) {
-                    setCardLength(currentLength);
-                }
-            }, 1000); // Check every second
-
-            return () => clearInterval(interval); // Cleanup the interval on component unmount
-        }
-    }, [cardHandler, cardLength]);
-
-    // Toggle dropdown
+    /**
+     * Show or hide the dropdown
+     */
     const handleToggle = () => {
         setOpen(!open);
     };
+
+    /**
+     * Handle when a card is added to rerender the dropdown
+     */
+    const handleAddCard = () => {
+        setForceRender((prev) => !prev);
+    };
+
+    /**
+     * Listen for when cards are added to rerender the dropdown
+     */
+    useEffect(() => {
+        if (!isMounted.current) {
+            AddCardEvent.Listen(handleAddCard);
+
+            isMounted.current = true;
+        }
+        return () => {
+            AddCardEvent.RemoveListener(handleAddCard);
+        };
+    }, []);
 
     return (
         <Box className="hidden md:block fixed m-20px w-[300px] right-4 top-28">

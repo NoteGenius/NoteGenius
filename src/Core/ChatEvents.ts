@@ -1,3 +1,9 @@
+/**
+ * Event for when a chat message is submitted
+ *
+ * @param message The message that was submitted
+ * @param userSent Whether the message was sent by the user
+ */
 export class SubmitChatMessageEvent extends Event {
     public message: string;
     public userSent: boolean;
@@ -27,6 +33,11 @@ export class SubmitChatMessageEvent extends Event {
     }
 }
 
+/**
+ * Event for when the textbar resizes
+ *
+ * @param height The new height of the textbar
+ */
 export class TextbarResizeEvent extends Event {
     public height: number;
 
@@ -54,6 +65,9 @@ export class TextbarResizeEvent extends Event {
     }
 }
 
+/**
+ * Event for when the current chat is switched
+ */
 export class SwitchCurrentChatEvent extends Event {
     constructor() {
         super("SwitchCurrentChat", { bubbles: true, cancelable: true });
@@ -71,6 +85,31 @@ export class SwitchCurrentChatEvent extends Event {
 
     public static RemoveListener(callback: () => void) {
         window.removeEventListener("SwitchCurrentChat", (event: Event) => {
+            callback();
+        });
+    }
+}
+
+/**
+ * Event for when a card is added
+ */
+export class AddCardEvent extends Event {
+    constructor() {
+        super("AddCard", { bubbles: true, cancelable: true });
+    }
+
+    public Dispatch() {
+        window.dispatchEvent(this);
+    }
+
+    public static Listen(callback: () => void) {
+        window.addEventListener("AddCard", (event: Event) => {
+            callback();
+        });
+    }
+
+    public static RemoveListener(callback: () => void) {
+        window.removeEventListener("AddCard", (event: Event) => {
             callback();
         });
     }

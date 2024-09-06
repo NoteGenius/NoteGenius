@@ -2,7 +2,7 @@ import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
 
 /**
  * AIHandler
- * 
+ *
  * Handles interactions with Google's Gemini AI models, providing functionality for generating text,
  * chat responses, and card titles. A singleton class ensuring only one instance is used throughout the application.
  */
@@ -59,14 +59,22 @@ class AIHandler {
                 );
 
                 try {
-                    const response = await this._lightAIModel.generateContent([prompt]);
+                    const response = await this._lightAIModel.generateContent([
+                        prompt,
+                    ]);
                     return response.response.text();
                 } catch (err: any) {
-                    console.error("Failed to generate text with the lighter model.", err);
+                    console.error(
+                        "Failed to generate text with the lighter model.",
+                        err,
+                    );
                     throw err; // Re-throw if the lighter model also fails
                 }
             } else {
-                console.error("An error occurred during text generation.", error);
+                console.error(
+                    "An error occurred during text generation.",
+                    error,
+                );
                 throw error;
             }
         }
@@ -74,24 +82,27 @@ class AIHandler {
 
     /**
      * Generates a chatbot response to the user's message.
-     * 
+     *
      * @param message - The user's input message.
      * @param messages - The previous messages in the chat.
      * @returns (Future) AI generated chatbot response.
      */
-    public async GenerateResponse(message: string, messages: String[]): Promise<string> {
+    public async GenerateResponse(
+        message: string,
+        messages: String[],
+    ): Promise<string> {
         const prompt = `
             You are a chatbot named Notegenius. Your primary objective is to help users study and organize study notes. 
             Please reply to the following message: ${message} 
             The conversation you are currently having includes these past messages: ${messages.join(" ||| ")}`;
-        
+
         return await this.GenerateText(prompt);
     }
 
     /**
      * Generates a 4-5 word title for a chat based on its messages.
      * If no messages exist, it returns "undefined."
-     * 
+     *
      * @param messages - The list of messages in the chat.
      * @returns A promise resolving to the generated chat title.
      */
@@ -99,7 +110,7 @@ class AIHandler {
         const prompt = `
             Generate a title in 4-5 words max for a chat with these messages: ${messages.join(" ||| ")}.
             If there are no messages, return "undefined".`;
-        
+
         return await this.GenerateText(prompt);
     }
 }
