@@ -123,6 +123,7 @@ class Card {
             CardHandler.getInstance().addCard(this);
         }
 
+        CardHandler.getInstance().saveCards();
         this._currentId++;
     }
 }
