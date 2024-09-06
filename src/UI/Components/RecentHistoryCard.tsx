@@ -6,7 +6,10 @@ interface RecentHistoryCardProps {
 }
 
 const RecentHistoryCard: React.FC<RecentHistoryCardProps> = ({ card }) => {
-    // Handles the user clicking on the card
+    /**
+     * Handles users clicking on a recent history card
+     * sets the current card to the clicked card
+     */
     const handleClick = () => {
         CardHandler.GetInstance().currentCard = card;
     };
