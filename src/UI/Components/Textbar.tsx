@@ -38,9 +38,16 @@ const Textbar: React.FC = () => {
 
         if (input.trim()) {
             new SubmitChatMessageEvent(input.trim(), true).Dispatch();
-            _AIHandler.generateText(input.trim()).then((response) => {
-                new SubmitChatMessageEvent(response, false).Dispatch();
-            });
+            _AIHandler
+                .generateResponse(
+                    input.trim(),
+                    Array.from(
+                        CardHandler.getInstance().currentCard.chats.values(),
+                    ),
+                )
+                .then((response) => {
+                    new SubmitChatMessageEvent(response, false).Dispatch();
+                });
             setInput(""); // Clear input after sending
         }
     };

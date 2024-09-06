@@ -64,6 +64,15 @@ class AIHandler {
         }
     }
 
+    /** Generates a chat response to users messages */
+    public async generateResponse(
+        message: string,
+        messages: String[],
+    ): Promise<string> {
+        const prompt = `You are to be a chatbot named Notegenius. Your primary objective is to help users study and organize study notes. When generating notes, you only use heavily researched techniques to insure that users have the most effective experience possible while studying with you. Please reply to the following message: ${message} || The conversation you are currently having with the users has these as the past messages (the different messages are separated by a ' ||| ' if there are any at all): ${messages.join("  |||  ")}`;
+        return await this.generateText(prompt);
+    }
+
     /** Generates a 4-5 word title for all the chats when they have their first message sent */
     public async generateCardTitle(messages: String[]): Promise<string> {
         const prompt =
