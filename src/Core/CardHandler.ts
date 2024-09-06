@@ -16,7 +16,7 @@ class CardHandler {
         this._currentCard = newCard;
         new SwitchCurrentChatEvent().Dispatch();
     }
-    
+
     constructor() {
         this.retrieveCards();
         this._currentCard = new Card();
@@ -40,10 +40,11 @@ class CardHandler {
             // Convert parsed JSON back to a Map<MessageInfo, string>
             this._cards = parsedCards.map((cardData: any) => {
                 // Convert the array of entries back to a Map
-                const chatEntries = Array.isArray(cardData._chats) 
-                    ? cardData._chats.map(
-                        ([key, value]: [any, string]) => [new MessageInfo(key._id, key._userSent), value]
-                    )
+                const chatEntries = Array.isArray(cardData._chats)
+                    ? cardData._chats.map(([key, value]: [any, string]) => [
+                          new MessageInfo(key._id, key._userSent),
+                          value,
+                      ])
                     : []; // If _chats is not an array, fallback to an empty array to prevent errors
 
                 return new Card(new Map(chatEntries), cardData._title);
@@ -53,7 +54,7 @@ class CardHandler {
 
     // Saves all the stored cards information to local storage
     public saveCards(): void {
-        const cardsToSave = this._cards.map(card => ({
+        const cardsToSave = this._cards.map((card) => ({
             _chats: Array.from(card.chats.entries()), // Convert Map to an array of entries
             _title: card.title,
         }));
@@ -103,7 +104,10 @@ class Card {
         this._currentId = 0;
 
         if (this._chats.size > 0) {
-            this._currentId = Math.max(...Array.from(this._chats.keys()).map(info => info.id)) + 1;
+            this._currentId =
+                Math.max(
+                    ...Array.from(this._chats.keys()).map((info) => info.id),
+                ) + 1;
         }
     }
 
@@ -113,7 +117,9 @@ class Card {
 
         // adding the card to recent history once there is a message sent
         if (this._currentId === 0) {
-            this._title = await AIHandler.getInstance().generateCardTitle(Array.from(this._chats.values()))
+            this._title = await AIHandler.getInstance().generateCardTitle(
+                Array.from(this._chats.values()),
+            );
             CardHandler.getInstance().addCard(this);
         }
 

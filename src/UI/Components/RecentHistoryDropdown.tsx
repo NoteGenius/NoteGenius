@@ -5,12 +5,12 @@ import {
     ExpandLess as ExpandLessIcon,
 } from "@mui/icons-material";
 import RecentHistoryCard from "./RecentHistoryCard"; // Adjust the import path as necessary
-import { useChat } from "@/Core/ChatContext";
+import { CardHandler } from "@/Core/CardHandler";
 
 const RecentHistoryDropdown = () => {
     const [open, setOpen] = useState(false);
     const [cardLength, setCardLength] = useState(0);
-    const { cardHandler } = useChat();
+    const cardHandler = CardHandler.getInstance();
 
     // Update card length and re-render when the card length changes
     useEffect(() => {
@@ -52,7 +52,10 @@ const RecentHistoryDropdown = () => {
                 </div>
             </Box>
             <Collapse in={open}>
-                <Box sx={{ mt: 2 }} className="flex flex-col space-y-2 w-full max-w-[300px] mx-auto">
+                <Box
+                    sx={{ mt: 2 }}
+                    className="flex flex-col space-y-2 w-full max-w-[300px] mx-auto"
+                >
                     {cardHandler
                         ?.getCards()
                         .map((card, index) => (

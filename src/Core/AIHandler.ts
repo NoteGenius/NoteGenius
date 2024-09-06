@@ -66,7 +66,9 @@ class AIHandler {
 
     /** Generates a 4-5 word title for all the chats when they have their first message sent */
     public async generateCardTitle(messages: String[]): Promise<string> {
-        const prompt = "Generate a title in 4-5 words max for a chat with the messages (return simply \"undefined\" if the card has no messages or you are unable to find a suitable title): " + messages.join("  |||  ");
+        const prompt =
+            'Generate a title in 4-5 words max for a chat with the messages (return simply "undefined" if the card has no messages or you are unable to find a suitable title): ' +
+            messages.join("  |||  ");
         return await this.generateText(prompt);
     }
 }
