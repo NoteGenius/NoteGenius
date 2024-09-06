@@ -6,7 +6,7 @@ import { FiMessageSquare, FiSend } from "react-icons/fi";
 
 const Textbar: React.FC = () => {
     const [input, setInput] = useState("");
-    const _AIHandler = AIHandler.getInstance();
+    const _AIHandler = AIHandler.GetInstance();
 
     // Handles input change
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -39,7 +39,7 @@ const Textbar: React.FC = () => {
         if (input.trim()) {
             new SubmitChatMessageEvent(input.trim(), true).Dispatch();
             _AIHandler
-                .generateResponse(
+                .GenerateResponse(
                     input.trim(),
                     Array.from(
                         CardHandler.GetInstance().currentCard.chats.values(),

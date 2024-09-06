@@ -164,7 +164,7 @@ class Card {
 
         if (this._currentId === 0) {
             // adding title and card to the card handler if it is the first message
-            this._title = await AIHandler.getInstance().generateCardTitle(
+            this._title = await AIHandler.GetInstance().GenerateCardTitle(
                 Array.from(this._chats.values()),
             );
             CardHandler.GetInstance().AddCard(this);
