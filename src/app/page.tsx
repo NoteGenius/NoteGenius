@@ -1,5 +1,6 @@
 "use client";
 import { CardHandler } from "@/Core/CardHandler";
+import Background from "@/UI/Components/Background";
 import Chat from "@/UI/Components/Chat";
 import RecentHistoryDropdown from "@/UI/Components/RecentHistoryDropdown";
 import Textbar from "@/UI/Components/Textbar";
@@ -33,7 +34,8 @@ export default function Home() {
     }
 
     return (
-        <main className="flex items-center justify-center h-screen bg-gradient-to-t from-gray-custom-light to-gray-custom">
+        <main className="flex items-center justify-center h-screen relative">
+            <Background />
             <Chat />
             <Textbar />
             <RecentHistoryDropdown />

@@ -45,3 +45,24 @@ body {
         rotate: -60deg;
     }
 }
+
+.blob {
+    position: absolute;
+    opacity: 0.6;
+    width: 350px;
+    aspect-ratio: 1/1;
+    filter: blur(50px);
+    z-index: -1;
+    background: radial-gradient(
+        circle at 50% 50%,
+        rgba(0, 255, 0, 0.7) 10%,
+        rgba(0, 128, 0, 0.4) 30%,
+        rgba(0, 200, 0, 0.5) 60%,
+        rgba(0, 100, 0, 1) 90%
+    );
+    border-radius: 50% 40% 60% 70% / 60% 40% 50% 70%;
+}
+
+.blob:hover {
+    filter: blur(30px);
+}

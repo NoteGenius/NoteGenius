@@ -117,8 +117,8 @@ const Chat: React.FC = () => {
                                 <div
                                     className={`p-4 rounded-lg ${
                                         isUserSent
-                                            ? "bg-gray-100 text-black"
-                                            : "bg-green-700 text-white"
+                                            ? "bg-gray-100 text-black drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
+                                            : "bg-green-700 text-white drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]"
                                     } max-w-[100%] sm:max-w-[60%] lg:max-w-[85%] break-words overflow-hidden prose custom-markdown`}
                                 >
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
