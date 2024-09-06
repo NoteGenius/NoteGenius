@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 
 /** Main page code */
 export default function Home() {
-
     const [isClient, setIsClient] = useState(false);
 
     // saving the cards when closing
@@ -30,7 +29,7 @@ export default function Home() {
     }, []);
 
     if (!isClient) {
-        return null; 
+        return null;
     }
 
     return (

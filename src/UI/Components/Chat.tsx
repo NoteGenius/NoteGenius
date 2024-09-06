@@ -1,9 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CardHandler } from "@/Core/CardHandler";
 import {
     SubmitChatMessageEvent,
