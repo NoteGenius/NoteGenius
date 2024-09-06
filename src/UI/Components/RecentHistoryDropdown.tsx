@@ -10,15 +10,15 @@ import { CardHandler } from "@/Core/CardHandler";
 const RecentHistoryDropdown = () => {
     const [open, setOpen] = useState(false);
     const [cardLength, setCardLength] = useState(0);
-    const cardHandler = CardHandler.getInstance();
+    const cardHandler = CardHandler.GetInstance();
 
     // Update card length and re-render when the card length changes
     useEffect(() => {
         if (cardHandler) {
-            setCardLength(cardHandler.getCards().length);
+            setCardLength(cardHandler.cards.length);
 
             const interval = setInterval(() => {
-                const currentLength = cardHandler.getCards().length;
+                const currentLength = cardHandler.cards.length;
                 if (currentLength !== cardLength) {
                     setCardLength(currentLength);
                 }
@@ -56,11 +56,9 @@ const RecentHistoryDropdown = () => {
                     sx={{ mt: 2 }}
                     className="flex flex-col space-y-2 w-full max-w-[300px] mx-auto"
                 >
-                    {cardHandler
-                        ?.getCards()
-                        .map((card, index) => (
-                            <RecentHistoryCard key={index} card={card} />
-                        ))}
+                    {cardHandler?.cards.map((card, index) => (
+                        <RecentHistoryCard key={index} card={card} />
+                    ))}
                 </Box>
             </Collapse>
         </Box>

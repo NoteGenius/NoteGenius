@@ -42,7 +42,7 @@ const Textbar: React.FC = () => {
                 .generateResponse(
                     input.trim(),
                     Array.from(
-                        CardHandler.getInstance().currentCard.chats.values(),
+                        CardHandler.GetInstance().currentCard.chats.values(),
                     ),
                 )
                 .then((response) => {
@@ -67,7 +67,7 @@ const Textbar: React.FC = () => {
     };
 
     const handleNewChat = () => {
-        CardHandler.getInstance().currentCard = new Card();
+        CardHandler.GetInstance().currentCard = new Card();
     };
 
     return (

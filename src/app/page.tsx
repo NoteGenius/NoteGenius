@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 /** Main page code */
 export default function Home() {
     const [isClient, setIsClient] = useState(false);
-    
+
     // checks to see if using client
     useEffect(() => {
         setIsClient(true);

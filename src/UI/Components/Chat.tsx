@@ -14,7 +14,7 @@ const Chat: React.FC = () => {
     const isMounted = useRef(false);
     const chatWindowRef = useRef<HTMLDivElement>(null);
 
-    const cardHandler = CardHandler.getInstance();
+    const cardHandler = CardHandler.GetInstance();
     const [forceRender, setForceRender] = useState(false);
 
     const [textbarHeight, setTextbarHeight] = useState(40); // Default height of the text bar
@@ -33,7 +33,7 @@ const Chat: React.FC = () => {
     // Callback for when messages are sent by user
     const onChatMessageSent = useCallback(
         (e: SubmitChatMessageEvent) => {
-            cardHandler.currentCard.addChat(e.message, e.userSent);
+            cardHandler.currentCard.AddChat(e.message, e.userSent);
             setForceRender((prev) => !prev);
         },
         [cardHandler.currentCard],
