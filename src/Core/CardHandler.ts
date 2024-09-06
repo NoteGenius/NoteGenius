@@ -1,5 +1,5 @@
 import AIHandler from "./AIHandler";
-import { SwitchCurrentChatEvent } from "./ChatEvents";
+import { AddCardEvent, ChatEvent } from "./ChatEvents";
 
 /**
  * CardHandler
@@ -23,7 +23,7 @@ class CardHandler {
 
     public set currentCard(newCard: Card) {
         this._currentCard = newCard;
-        new SwitchCurrentChatEvent().Dispatch();
+        new ChatEvent().Dispatch();
     }
 
     /**
@@ -96,6 +96,7 @@ class CardHandler {
      */
     public AddCard(card: Card): void {
         this._cards.push(card);
+        new AddCardEvent().Dispatch();
         this.SaveCards();
     }
 

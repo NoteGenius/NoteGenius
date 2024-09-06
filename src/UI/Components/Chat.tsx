@@ -1,21 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CardHandler } from "@/Core/CardHandler";
-import {
-    SubmitChatMessageEvent,
-    SwitchCurrentChatEvent,
-    TextbarResizeEvent,
-} from "@/Core/ChatEvents";
+import { ChatEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // Adds GitHub-flavored markdown (lists, tables)
 import "@/UI/Style/markdown.css";
 
 const Chat: React.FC = () => {
-    const isMounted = useRef(false);
-    const chatWindowRef = useRef<HTMLDivElement>(null);
+    const isMounted = useRef(false); // Check if the component is mounted
+    const chatWindowRef = useRef<HTMLDivElement>(null); // Reference to the chat window html component
 
     const cardHandler = CardHandler.GetInstance();
-    const [forceRender, setForceRender] = useState(false);
+    const [forceRender, setForceRender] = useState(false); // Force rerender when true
 
     const [textbarHeight, setTextbarHeight] = useState(40); // Default height of the text bar
     const [windowSize, setWindowSize] = useState({
@@ -23,6 +19,10 @@ const Chat: React.FC = () => {
         height: window.innerHeight,
     });
 
+    /**
+     * Scroll to the bottom of the chat window
+     * ran every rerender
+     */
     const scrollToBottom = () => {
         if (chatWindowRef.current) {
             chatWindowRef.current.scrollTop =
@@ -30,21 +30,17 @@ const Chat: React.FC = () => {
         }
     };
 
-    // Callback for when messages are sent by user
-    const onChatMessageSent = useCallback(
-        (e: SubmitChatMessageEvent) => {
-            cardHandler.currentCard.AddChat(e.message, e.userSent);
-            setForceRender((prev) => !prev);
-        },
-        [cardHandler.currentCard],
-    );
-
-    // Adjust chat height based on the textbar resize
+    /**
+     * Adjust chat height based on the textbar resize
+     */
     const onTextbarResize = useCallback((e: TextbarResizeEvent) => {
         setTextbarHeight(e.height);
         scrollToBottom();
     }, []);
 
+    /**
+     * Adjust chat height based on the window resize
+     */
     const onWindowResize = useCallback(() => {
         setWindowSize({
             width: window.innerWidth,
@@ -52,23 +48,30 @@ const Chat: React.FC = () => {
         });
     }, []);
 
-    const onSwitchCurrentChat = useCallback(() => {
+    /**
+     * Force rerender when a chat message is sent
+     */
+    const onChatEvent = useCallback(() => {
         setForceRender((prev) => !prev);
     }, []);
 
-    // Scroll to the bottom when the component mounts or when chats change
+    /**
+     * Scrolls to bottom on rerender
+     *
+     * Force rerender when dependencies change
+     */
     useEffect(() => {
         scrollToBottom();
-
         // forcing re-render when any of these values change
     }, [textbarHeight, windowSize, forceRender]);
 
-    // Add and remove event listeners for chat message and textbar resize
+    /**
+     * Handles event listeners
+     */
     useEffect(() => {
         if (!isMounted.current) {
-            SubmitChatMessageEvent.Listen(onChatMessageSent);
             TextbarResizeEvent.Listen(onTextbarResize);
-            SwitchCurrentChatEvent.Listen(onSwitchCurrentChat);
+            ChatEvent.Listen(onChatEvent);
 
             isMounted.current = true;
         }
@@ -76,18 +79,12 @@ const Chat: React.FC = () => {
         window.addEventListener("resize", onWindowResize);
 
         return () => {
-            SubmitChatMessageEvent.RemoveListener(onChatMessageSent);
             TextbarResizeEvent.RemoveListener(onTextbarResize);
-            SwitchCurrentChatEvent.RemoveListener(onSwitchCurrentChat);
+            ChatEvent.RemoveListener(onChatEvent);
 
             window.removeEventListener("resize", onWindowResize);
         };
-    }, [
-        onChatMessageSent,
-        onSwitchCurrentChat,
-        onTextbarResize,
-        onWindowResize,
-    ]);
+    }, [onChatEvent, onTextbarResize, onWindowResize]);
 
     return (
         <div className="fixed inset-0 md:top-[100px] top-0 flex justify-center sm:justify-center">
