@@ -96,7 +96,7 @@ const Chat: React.FC = () => {
                 className="w-full md:w-3/5 sm-h-auto bg-transparent rounded-lg overflow-y-scroll p-4 scrollbar-custom"
                 style={
                     window.innerWidth >= 768
-                        ? { height: `calc(90vh - ${textbarHeight + 60}px)` }
+                        ? { height: `calc(100vh - ${textbarHeight + 150}px)` }
                         : { height: `calc(100vh - ${textbarHeight + 50}px)` }
                 }
             >
