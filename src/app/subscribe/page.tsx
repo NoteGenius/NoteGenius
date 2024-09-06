@@ -1,6 +1,11 @@
 import "@/UI/Style/bubble.css";
 import "@/UI/Style/grid.css";
 
+/**
+ * Settings Page
+ * 
+ * Currently displays under construction
+ */
 export default function SettingsPage() {
     return (
         <main className="flex flex-col items-center space-y-14 justify-center h-screen bg-gradient-to-t from-gray-custom-light to-gray-custom grid-pattern">

@@ -1,32 +1,36 @@
-export class SubmitChatMessageEvent extends Event {
-    public message: string;
-    public userSent: boolean;
-
-    constructor(message: string, userSent: boolean) {
-        super("SubmitChatMessage", { bubbles: true, cancelable: true });
-        this.message = message;
-        this.userSent = userSent;
+/**
+ * Event for general chat events to force a rerender
+ *
+ * rerenders the chat
+ */
+export class ChatEvent extends Event {
+    constructor() {
+        super("ChatEvent", { bubbles: true, cancelable: true });
     }
 
     public Dispatch() {
         window.dispatchEvent(this);
     }
 
-    public static Listen(callback: (event: SubmitChatMessageEvent) => void) {
-        window.addEventListener("SubmitChatMessage", (event: Event) => {
-            callback(event as SubmitChatMessageEvent);
+    public static Listen(callback: () => void) {
+        window.addEventListener("ChatEvent", (event: Event) => {
+            callback();
         });
     }
 
-    public static RemoveListener(
-        callback: (event: SubmitChatMessageEvent) => void,
-    ) {
-        window.removeEventListener("SubmitChatMessage", (event: Event) => {
-            callback(event as SubmitChatMessageEvent);
+    public static RemoveListener(callback: () => void) {
+        window.removeEventListener("ChatEvent", (event: Event) => {
+            callback();
         });
     }
 }
 
+/**
+ * Event for when the textbar resizes
+ *
+ * rerenders the chat
+ * @param height The new height of the textbar
+ */
 export class TextbarResizeEvent extends Event {
     public height: number;
 
@@ -54,9 +58,14 @@ export class TextbarResizeEvent extends Event {
     }
 }
 
-export class SwitchCurrentChatEvent extends Event {
+/**
+ * Event for when a card is added
+ *
+ * rerenders the dropdown
+ */
+export class AddCardEvent extends Event {
     constructor() {
-        super("SwitchCurrentChat", { bubbles: true, cancelable: true });
+        super("AddCard", { bubbles: true, cancelable: true });
     }
 
     public Dispatch() {
@@ -64,13 +73,13 @@ export class SwitchCurrentChatEvent extends Event {
     }
 
     public static Listen(callback: () => void) {
-        window.addEventListener("SwitchCurrentChat", (event: Event) => {
+        window.addEventListener("AddCard", (event: Event) => {
             callback();
         });
     }
 
     public static RemoveListener(callback: () => void) {
-        window.removeEventListener("SwitchCurrentChat", (event: Event) => {
+        window.removeEventListener("AddCard", (event: Event) => {
             callback();
         });
     }

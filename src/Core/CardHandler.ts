@@ -1,12 +1,21 @@
 import AIHandler from "./AIHandler";
-import { SwitchCurrentChatEvent } from "./ChatEvents";
+import { AddCardEvent, ChatEvent } from "./ChatEvents";
 
+/**
+ * CardHandler
+ *
+ * Handles the storage (locally) of cards, which are collections of messages.
+ * Has only one static instance that is shared across the application.
+ */
 class CardHandler {
-    private static instance: CardHandler;
+    private static instance: CardHandler; // holds the common instance of the CardHandler
 
-    // holds all the cards informatoin
-    private _cards: Card[] = [];
-    private _currentCard: Card;
+    private _cards: Card[] = []; // cached list of cards
+    private _currentCard: Card; // the current instance of the card being viewed
+
+    public get cards(): Card[] {
+        return this._cards;
+    }
 
     public get currentCard(): Card {
         return this._currentCard;
@@ -14,16 +23,25 @@ class CardHandler {
 
     public set currentCard(newCard: Card) {
         this._currentCard = newCard;
-        new SwitchCurrentChatEvent().Dispatch();
+        new ChatEvent().Dispatch();
     }
 
+    /**
+     * On creating a new instance (on opening the website), retrieves the cards from local storage
+     * sets the current viewed card as an empty card
+     */
     constructor() {
-        this.retrieveCards();
+        this.RetrieveCards();
         this._currentCard = new Card();
     }
 
-    /** Retreives the current instance of the CardHandler */
-    public static getInstance(): CardHandler {
+    /**
+     * Retrieves the common instance of the CardHandler
+     *
+     * If the instance does not exist, it creates a new instance
+     * @returns the instance of the CardHandler
+     */
+    public static GetInstance(): CardHandler {
         if (!CardHandler.instance) {
             CardHandler.instance = new CardHandler();
         }
@@ -31,8 +49,13 @@ class CardHandler {
         return CardHandler.instance;
     }
 
-    // Retrieves all the stored cards information from local storage
-    public retrieveCards() {
+    /**
+     * Retrieves all the stored cards information from local storage
+     *
+     * Adds retrieved cards to the cached _cards array
+     * @returns void
+     */
+    public RetrieveCards() {
         const storedCards = localStorage.getItem("cards");
         if (storedCards) {
             const parsedCards = JSON.parse(storedCards);
@@ -52,8 +75,12 @@ class CardHandler {
         }
     }
 
-    // Saves all the stored cards information to local storage
-    public saveCards(): void {
+    /**
+     * Saves all the stored cards information to local storage\
+     *
+     * @returns void
+     */
+    public SaveCards(): void {
         const cardsToSave = this._cards.map((card) => ({
             _chats: Array.from(card.chats.entries()), // Convert Map to an array of entries
             _title: card.title,
@@ -62,29 +89,37 @@ class CardHandler {
         localStorage.setItem("cards", JSON.stringify(cardsToSave));
     }
 
-    // Adds a new card to the list and saves it
-    public addCard(card: Card): void {
+    /**
+     * Adds a new card to the list and saves to local storage
+     *
+     * @param card - the instance of the card
+     */
+    public AddCard(card: Card): void {
         this._cards.push(card);
-        this.saveCards();
+        new AddCardEvent().Dispatch();
+        this.SaveCards();
     }
 
-    // Removes a card from the list by index and saves the updated list
-    public removeCard(index: number): void {
+    /**
+     * Removes a card from the list by index and saves the updated list
+     *
+     * @param index - the index of the card to remove
+     */
+    public RemoveCard(index: number): void {
         this._cards.splice(index, 1);
-        this.saveCards();
-    }
-
-    // Retrieves all the cards
-    public getCards(): Card[] {
-        return this._cards;
+        this.SaveCards();
     }
 }
 
-// Object for each card that holds their information
+/**
+ * Card (object)
+ *
+ * Represents a card, which is a collection of messages.
+ */
 class Card {
-    private _chats: Map<MessageInfo, String>;
+    private _chats: Map<MessageInfo, String>; // stores the messages in the card
     private _title: string;
-    private _currentId: number;
+    private _currentId: number; // the id of the next message to be added
 
     public get title(): string {
         return this._title;
@@ -98,6 +133,13 @@ class Card {
         return this._chats;
     }
 
+    /**
+     * Initalizes the card
+     * parameters used if importing from local storage
+     *
+     * @param chats - the messages in the card
+     * @param title - the title of the card
+     */
     constructor(chats?: Map<MessageInfo, String>, title?: string) {
         this._chats = chats || new Map<MessageInfo, String>();
         this._title = title || "untitled";
@@ -111,22 +153,34 @@ class Card {
         }
     }
 
-    public async addChat(message: string, userSent: boolean) {
-        const info = new MessageInfo(this._currentId, userSent);
-        this._chats.set(info, message);
+    /**
+     * Adds a message to the card
+     * generates the title of the card if it is the first message
+     *
+     * @param message - the message to be added to the card
+     * @param userSent - whether the message was sent by the user or the bot
+     */
+    public async AddChat(message: string, userSent: boolean) {
+        this._chats.set(new MessageInfo(this._currentId, userSent), message);
 
-        // adding the card to recent history once there is a message sent
         if (this._currentId === 0) {
-            this._title = await AIHandler.getInstance().generateCardTitle(
+            // adding title and card to the card handler if it is the first message
+            this._title = await AIHandler.GetInstance().GenerateCardTitle(
                 Array.from(this._chats.values()),
             );
-            CardHandler.getInstance().addCard(this);
+            CardHandler.GetInstance().AddCard(this);
         }
 
+        CardHandler.GetInstance().SaveCards();
         this._currentId++;
     }
 }
 
+/**
+ * MessageInfo (object)
+ *
+ * Represents the information of a message, including the id and whether it was sent by the user or the bot.
+ */
 class MessageInfo {
     private _id: number;
     private _userSent: boolean;

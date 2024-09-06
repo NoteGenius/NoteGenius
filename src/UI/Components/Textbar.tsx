@@ -1,12 +1,13 @@
 import AIHandler from "@/Core/AIHandler";
 import { Card, CardHandler } from "@/Core/CardHandler";
-import { SubmitChatMessageEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
+import { ChatEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { FiMessageSquare, FiSend } from "react-icons/fi";
 
 const Textbar: React.FC = () => {
     const [input, setInput] = useState("");
-    const _AIHandler = AIHandler.getInstance();
+    const aiHandler = AIHandler.GetInstance();
+    const cardHandler = CardHandler.GetInstance();
 
     // Handles input change
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -24,11 +25,14 @@ const Textbar: React.FC = () => {
         new TextbarResizeEvent(newHeight).Dispatch();
     };
 
-    // Handles submission of input
+    /**
+     * Handle when a new chat is submitted
+     * executed by "enter" key press or send button click
+     */
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // check if there is internet if not then return
+        // return if there is no internet connection
         if (!navigator.onLine) {
             console.error(
                 "No internet connection. Please check your connection and try again.",
@@ -37,22 +41,30 @@ const Textbar: React.FC = () => {
         }
 
         if (input.trim()) {
-            new SubmitChatMessageEvent(input.trim(), true).Dispatch();
-            _AIHandler
-                .generateResponse(
+            // Adding user chat to the current chat card
+            cardHandler.currentCard.AddChat(input.trim(), true);
+            new ChatEvent().Dispatch();
+
+            // generating response and adding that to the current chat card
+            aiHandler
+                .GenerateResponse(
                     input.trim(),
-                    Array.from(
-                        CardHandler.getInstance().currentCard.chats.values(),
-                    ),
+                    Array.from(cardHandler.currentCard.chats.values()),
                 )
                 .then((response) => {
-                    new SubmitChatMessageEvent(response, false).Dispatch();
+                    cardHandler.currentCard.AddChat(response, false);
+                    new ChatEvent().Dispatch();
                 });
-            setInput(""); // Clear input after sending
+
+            // clear input after sending
+            setInput("");
         }
     };
 
-    // Handles keydown event to submit form on Enter key press
+    /**
+     * Handle when the "enter" key is pressed
+     * -> executes handleSubmit
+     */
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -66,8 +78,11 @@ const Textbar: React.FC = () => {
         }
     };
 
+    /**
+     * Handle when the new chat button is clicked
+     */
     const handleNewChat = () => {
-        CardHandler.getInstance().currentCard = new Card();
+        cardHandler.currentCard = new Card();
     };
 
     return (

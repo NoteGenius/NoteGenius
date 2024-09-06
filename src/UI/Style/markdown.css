@@ -3,20 +3,20 @@
 }
 
 .custom-markdown ol {
-    color: white; /* Set the list numbers to white */
+    color: white; /* Sets the list to white */
 }
 
 .custom-markdown strong {
     color: white; /* Set bold text to white */
-    font-weight: bold; /* Ensure boldness */
+    font-weight: bold;
 }
 
-/* Set headers (h1, h2, h3, etc.) to white */
+/* Set headers to white */
 .custom-markdown h1,
 .custom-markdown h2,
 .custom-markdown h3,
 .custom-markdown h4,
 .custom-markdown h5,
 .custom-markdown h6 {
-    color: white; /* Set header text to white */
+    color: white;
 }
