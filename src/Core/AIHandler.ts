@@ -113,6 +113,18 @@ class AIHandler {
 
         return await this.GenerateText(prompt);
     }
+
+    /** 
+     * Generates a 4-5 word summary for a source based on its content.
+     * 
+     * @param source - The content of the source.
+     * @returns A promise resolving to the generated source summary.
+     */
+    public async GenerateSourceSummary(source: string): Promise<string> {
+        const prompt = `Generate a 4-5 word summary for the source with this content: ${source}.`;
+
+        return await this.GenerateText(prompt);
+    }
 }
 
 export default AIHandler;

@@ -2,6 +2,7 @@
 import Background from "@/UI/Components/Background";
 import Chat from "@/UI/Components/Chat";
 import RecentHistoryDropdown from "@/UI/Components/RecentHistoryDropdown";
+import Sources from "@/UI/Components/Sources";
 import Textbar from "@/UI/Components/Textbar";
 import Topbar from "@/UI/Components/Topbar";
 import { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ export default function Home() {
             <Textbar />
             <RecentHistoryDropdown />
             <Topbar />
+            <Sources />
         </main>
     );
 }

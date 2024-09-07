@@ -1,8 +1,8 @@
 import AIHandler from "@/Core/AIHandler";
 import { Card, CardHandler } from "@/Core/CardHandler";
-import { ChatEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
+import { ChatEvent, OpenSourcesPanelEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { FiMessageSquare, FiSend } from "react-icons/fi";
+import { FiMessageSquare, FiPaperclip, FiSend } from "react-icons/fi";
 
 const Textbar: React.FC = () => {
     const [input, setInput] = useState("");
@@ -82,6 +82,13 @@ const Textbar: React.FC = () => {
             }
         }
     };
+    
+    /** 
+     * Opens the add source panel
+     */
+    const handleAddSource = () => {
+        new OpenSourcesPanelEvent().Dispatch();
+    }
 
     /**
      * Handle when the new chat button is clicked
@@ -93,6 +100,9 @@ const Textbar: React.FC = () => {
     return (
         <div className="fixed bottom-5 w-3/4 bg-transparent rounded-2xl border-[#a6a6a6] border-2">
             <form className="flex items-center p-3" onSubmit={handleSubmit}>
+                <button className="text-green-600 hover:text-green-800" onClick={handleAddSource} title="Add Source">
+                    <FiPaperclip size={24} />
+                </button>
                 <textarea
                     value={input}
                     onChange={handleChange}
