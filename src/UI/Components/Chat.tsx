@@ -6,6 +6,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // Adds GitHub-flavored markdown (lists, tables)
 import "@/UI/Style/markdown.css";
 
+import "@/UI/Style/chat.css";
+
 const Chat: React.FC = () => {
     const isMounted = useRef(false); // Check if the component is mounted
     const chatWindowRef = useRef<HTMLDivElement>(null); // Reference to the chat window html component
@@ -107,11 +109,10 @@ const Chat: React.FC = () => {
                                 className={`flex ${isUserSent ? "justify-end" : "justify-start"} mb-4`}
                             >
                                 <div
-                                    className={`p-4 rounded-lg ${
-                                        isUserSent
+                                    className={`p-4 rounded-lg ${isUserSent
                                             ? "bg-gray-100 text-black drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
                                             : "bg-green-700 text-white drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]"
-                                    } max-w-[100%] sm:max-w-[60%] lg:max-w-[85%] break-words overflow-hidden prose custom-markdown`}
+                                        } max-w-[100%] sm:max-w-[60%] lg:max-w-[85%] break-words overflow-hidden prose custom-markdown`}
                                 >
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                         {messageText.toString()}
@@ -121,6 +122,22 @@ const Chat: React.FC = () => {
                         );
                     },
                 )}
+                {cardHandler.currentCard.botIsTyping && (
+    <div className="flex justify-start mb-4">
+        <div className="p-4 rounded-lg bg-green-700 text-white drop-shadow-[0_0_8px_rgba(0,255,0,0.5)] max-w-[100%] sm:max-w-[60%] lg:max-w-[85%] break-words overflow-hidden">
+            <div className="flex items-center">
+                <ReactMarkdown className="mr-2">**NoteGenius is typing**</ReactMarkdown>
+                <div className="typing-dots flex">
+                    <span className="dot">.</span>
+                    <span className="dot">.</span>
+                    <span className="dot">.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+)}
+
+
             </div>
         </div>
     );

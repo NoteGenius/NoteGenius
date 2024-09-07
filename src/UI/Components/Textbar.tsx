@@ -41,8 +41,13 @@ const Textbar: React.FC = () => {
         }
 
         if (input.trim()) {
+            const currentCard = cardHandler.currentCard;
+
+            // if the bot is typing, don't allow user to send another message
+            if (currentCard.botIsTyping) return;
+
             // Adding user chat to the current chat card
-            cardHandler.currentCard.AddChat(input.trim(), true);
+            currentCard.AddChat(input.trim(), true);
             new ChatEvent().Dispatch();
 
             // generating response and adding that to the current chat card
@@ -52,7 +57,7 @@ const Textbar: React.FC = () => {
                     Array.from(cardHandler.currentCard.chats.values()),
                 )
                 .then((response) => {
-                    cardHandler.currentCard.AddChat(response, false);
+                    currentCard.AddChat(response, false);
                     new ChatEvent().Dispatch();
                 });
 
