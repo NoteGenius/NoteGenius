@@ -1,4 +1,5 @@
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
+import { YoutubeTranscript } from "youtube-transcript";
 
 /**
  * AIHandler
@@ -89,10 +90,12 @@ class AIHandler {
      */
     public async GenerateResponse(
         message: string,
-        messages: String[],
+        messages: string[],
+        sources: string[],
     ): Promise<string> {
         const prompt = `
             You are a chatbot named Notegenius. Your primary objective is to help users study and organize study notes. 
+            For the current chat, here are the sources (if any) that the user has provided. If the user has provided a source with the information containing anything related to the message, only utilize the source for your response: ${sources.join(" ||| ")}.
             Please reply to the following message: ${message} 
             The conversation you are currently having includes these past messages: ${messages.join(" ||| ")}`;
 
@@ -106,7 +109,7 @@ class AIHandler {
      * @param messages - The list of messages in the chat.
      * @returns A promise resolving to the generated chat title.
      */
-    public async GenerateCardTitle(messages: String[]): Promise<string> {
+    public async GenerateCardTitle(messages: string[]): Promise<string> {
         const prompt = `
             Generate a title in 4-5 words max for a chat with these messages: ${messages.join(" ||| ")}.
             If there are no messages, return "undefined".`;
@@ -125,6 +128,29 @@ class AIHandler {
 
         return await this.GenerateText(prompt);
     }
+    
+    /**
+     * Fetches the transcript of a YouTube video using npm package
+     */
+    public async FetchYoutubeTranscript(url: string): Promise<string> {
+
+        try {
+            const response = await fetch('/api/transcription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url }),
+            });
+
+            const data = await response.json();
+            return data.transcript.map((segment: { text: string }) => segment.text).join(' ');
+        } catch (error) {
+            alert("Failed to fetch the YouTube transcript. Please try again.");
+            throw error;
+        }
+    }
+
 }
 
 export default AIHandler;

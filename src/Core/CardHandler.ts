@@ -70,16 +70,15 @@ class CardHandler {
                       ])
                     : []; // If _chats is not an array, fallback to an empty array to prevent errors
                     
-            // Convert the array of entries back to a Map for sources
-            const sourceEntries = Array.isArray(cardData._sources)
-                ? cardData._sources.map(([source, summary]: [string, string]) => [
-                      source,
-                      summary,
-                  ])
-                : []; // If _sources is not an array, fallback to an empty array to prevent errors
+                // Convert the array of entries back to a Map for sources
+                const sourceEntries = Array.isArray(cardData._sources)
+                    ? cardData._sources.map(([key, value]: [string, string]) => [
+                            key,
+                            value,
+                        ])
+                    : []; // If _sources is not an array, fallback to an empty array to prevent errors
 
-
-                return new Card(new Map(chatEntries), sourceEntries, cardData._title);
+                return new Card(new Map(chatEntries), new Map(sourceEntries), cardData._title);
             });
         }
     }
@@ -127,7 +126,7 @@ class CardHandler {
  * Represents a card, which is a collection of messages.
  */
 class Card {
-    private _chats: Map<MessageInfo, String>; // stores the messages in the card
+    private _chats: Map<MessageInfo, string>; // stores the messages in the card
     private _sources: Map<string, string>; // stores the sources and their 5 word summaries
     private _title: string;
     private _currentId: number; // the id of the next message to be added
@@ -142,7 +141,7 @@ class Card {
         this._title = newTitle;
     }
 
-    public get chats(): Map<MessageInfo, String> {
+    public get chats(): Map<MessageInfo, string> {
         return this._chats;
     }
 
@@ -161,9 +160,9 @@ class Card {
      * @param chats - the messages in the card
      * @param title - the title of the card
      */
-    constructor(chats?: Map<MessageInfo, String>, sources?: Map<string, string>, title?: string) {
-        this._chats = chats || new Map<MessageInfo, String>();
-        this._sources = new Map<string, string>();
+    constructor(chats?: Map<MessageInfo, string>, sources?: Map<string, string>, title?: string) {
+        this._chats = chats || new Map<MessageInfo, string>();
+        this._sources = sources || new Map<string, string>();
         this._title = title || "untitled";
         this._currentId = 0;
 
@@ -213,7 +212,8 @@ class Card {
      * @param source - the source to be added to the card
      */
     public async AddSource(source: string) {
-        AIHandler.GetInstance().GenerateSourceSummary(source).then((summary) => this._sources.set(source, summary));
+        console.log("Adding source: ", source);
+        this._sources.set(source, await AIHandler.GetInstance().GenerateSourceSummary(source))
 
         CardHandler.GetInstance().SaveCards();
     }
