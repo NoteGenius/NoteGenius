@@ -121,6 +121,8 @@ class Card {
     private _title: string;
     private _currentId: number; // the id of the next message to be added
 
+    private _botIsTyping: boolean = false; // whether the bot is currently typing
+
     public get title(): string {
         return this._title;
     }
@@ -131,6 +133,10 @@ class Card {
 
     public get chats(): Map<MessageInfo, String> {
         return this._chats;
+    }
+
+    public get botIsTyping(): boolean {
+        return this._botIsTyping;
     }
 
     /**
@@ -161,10 +167,19 @@ class Card {
      * @param userSent - whether the message was sent by the user or the bot
      */
     public async AddChat(message: string, userSent: boolean) {
-        this._chats.set(new MessageInfo(this._currentId, userSent), message);
 
-        if (this._currentId === 0) {
-            // adding title and card to the card handler if it is the first message
+        if (this.botIsTyping && userSent) {
+            console.error("Bot is typing, cannot send message");
+            return;
+        } else if (userSent) { // if the user sent this message, the bot is typing
+            this._botIsTyping = true;
+        } else if (!userSent) { // if the bot sent this message, the bot has stopped typing
+            this._botIsTyping = false;
+        }
+
+        this._chats.set(new MessageInfo(this._currentId, userSent), message); // add the message to the card
+
+        if (this._currentId === 0) { // adding title and card to the card handler if it is the first message
             this._title = await AIHandler.GetInstance().GenerateCardTitle(
                 Array.from(this._chats.values()),
             );
