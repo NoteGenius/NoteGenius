@@ -3,7 +3,7 @@ import "@/UI/Style/grid.css";
 
 /**
  * Settings Page
- * 
+ *
  * Currently displays under construction
  */
 export default function SettingsPage() {

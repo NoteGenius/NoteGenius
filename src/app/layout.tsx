@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/UI/Style/globals.css";
-import 'core-js/proposals/promise-with-resolvers';
+import "core-js/proposals/promise-with-resolvers";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -3,7 +3,7 @@ import { YoutubeTranscript } from "youtube-transcript";
 
 /**
  * API request to fetch YouTube transcript on the server side
- * 
+ *
  * @param request - The request object
  * @returns the transcript of the video
  */
@@ -17,6 +17,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ transcript: transcript });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ error: 'Failed to fetch transcript' }, { status: 500 });
+        return NextResponse.json(
+            { error: "Failed to fetch transcript" },
+            { status: 500 },
+        );
     }
 }

@@ -1,5 +1,3 @@
-// Updated RecentHistoryCard.tsx
-
 import React, { useState } from "react";
 import { Card, CardHandler } from "@/Core/CardHandler";
 import { IconButton } from "@mui/material";
@@ -13,7 +11,10 @@ interface RecentHistoryCardProps {
     isCurrent: boolean;
 }
 
-const RecentHistoryCard: React.FC<RecentHistoryCardProps> = ({ card, isCurrent }) => {
+const RecentHistoryCard: React.FC<RecentHistoryCardProps> = ({
+    card,
+    isCurrent,
+}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(card.title);
     const [isHovered, setIsHovered] = useState(false);
@@ -51,7 +52,7 @@ const RecentHistoryCard: React.FC<RecentHistoryCardProps> = ({ card, isCurrent }
         setIsEditing(false);
     };
 
-    /** 
+    /**
      * will handle save if the enter key is pressed
      */
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -64,7 +65,7 @@ const RecentHistoryCard: React.FC<RecentHistoryCardProps> = ({ card, isCurrent }
         <div
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className={`relative ${isCurrent ? 'bg-gray-300' : 'bg-white'} rounded-2xl p-2.5 mx-auto my-1 text-center text-base font-sans font-bold text-black w-full shadow-md hover:shadow-lg transition-shadow duration-300 drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]`}
+            className={`relative ${isCurrent ? "bg-gray-300" : "bg-white"} rounded-2xl p-2.5 mx-auto my-1 text-center text-base font-sans font-bold text-black w-full shadow-md hover:shadow-lg transition-shadow duration-300 drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]`}
         >
             {isEditing ? (
                 <input
@@ -84,12 +85,19 @@ const RecentHistoryCard: React.FC<RecentHistoryCardProps> = ({ card, isCurrent }
             {isHovered && (
                 <div className="absolute top-1 right-1 flex space-x-2">
                     {/* Edit Icon */}
-                    <IconButton onClick={isEditing ? handleSave : handleEdit} size="small">
+                    <IconButton
+                        onClick={isEditing ? handleSave : handleEdit}
+                        size="small"
+                    >
                         {isEditing ? <CheckIcon /> : <EditIcon />}
                     </IconButton>
 
                     {/* Delete Icon */}
-                    <IconButton onClick={handleDelete} size="small" color="error">
+                    <IconButton
+                        onClick={handleDelete}
+                        size="small"
+                        color="error"
+                    >
                         <DeleteIcon />
                     </IconButton>
                 </div>

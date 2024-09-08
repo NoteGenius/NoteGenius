@@ -86,7 +86,7 @@ export class RecentHistoryEvent extends Event {
 
 /**
  * Event for when the sources panel is opened
- * 
+ *
  * opens the sources panel
  */
 export class OpenSourcesPanelEvent extends Event {
