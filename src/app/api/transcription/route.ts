@@ -17,5 +17,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ transcript: transcript });
     } catch (error) {
         console.error(error);
+        return NextResponse.json({ error: 'Failed to fetch transcript' }, { status: 500 });
     }
 }

@@ -55,7 +55,7 @@ const Textbar: React.FC = () => {
                 .GenerateResponse(
                     input.trim(),
                     Array.from(cardHandler.currentCard.chats.values()),
-                    Array.from(cardHandler.currentCard.sources.keys()),
+                    Array.from(cardHandler.currentCard.sources.values()),
                 )
                 .then((response) => {
                     currentCard.AddChat(response, false);

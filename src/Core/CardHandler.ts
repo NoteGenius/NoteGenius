@@ -127,7 +127,7 @@ class CardHandler {
  */
 class Card {
     private _chats: Map<MessageInfo, string>; // stores the messages in the card
-    private _sources: Map<string, string>; // stores the sources and their 5 word summaries
+    private _sources: Map<string, string>; // stores the 5 words summaries and the sources in format [summary, source]
     private _title: string;
     private _currentId: number; // the id of the next message to be added
 
@@ -211,11 +211,20 @@ class Card {
      * 
      * @param source - the source to be added to the card
      */
-    public async AddSource(source: string) {
-        console.log("Adding source: ", source);
-        this._sources.set(source, await AIHandler.GetInstance().GenerateSourceSummary(source))
-
+    public async AddSource(source: string): Promise<boolean> {
+        this._sources.set(await AIHandler.GetInstance().GenerateSourceSummary(source), source)
         CardHandler.GetInstance().SaveCards();
+
+        return true;
+    }
+
+    /** 
+     * Removes a source from the card 
+     * 
+     * @param source - the summary of the source to be removed
+     */
+    public RemoveSource(source: string) {
+        this._sources.delete(source);
     }
 }
 

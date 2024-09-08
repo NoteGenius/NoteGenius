@@ -1,5 +1,4 @@
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
-import { YoutubeTranscript } from "youtube-transcript";
 
 /**
  * AIHandler
@@ -94,8 +93,8 @@ class AIHandler {
         sources: string[],
     ): Promise<string> {
         const prompt = `
-            You are a chatbot named Notegenius. Your primary objective is to help users study and organize study notes. 
-            For the current chat, here are the sources (if any) that the user has provided. If the user has provided a source with the information containing anything related to the message, only utilize the source for your response: ${sources.join(" ||| ")}.
+            You are a chatbot named Notegenius. Your primary objective is to help users study and organize study notes. Be very concise in your responses and ensure all analysis is very high-level.
+            For the current chat, here are the sources (if any) that the user has provided. If the user has provided a source with the information containing anything related to the message, only utilize the source for your response. Make sure to prioritize the source over past messages: ${sources.join(" ||| ")}.
             Please reply to the following message: ${message} 
             The conversation you are currently having includes these past messages: ${messages.join(" ||| ")}`;
 
@@ -124,7 +123,7 @@ class AIHandler {
      * @returns A promise resolving to the generated source summary.
      */
     public async GenerateSourceSummary(source: string): Promise<string> {
-        const prompt = `Generate a 4-5 word summary for the source with this content: ${source}.`;
+        const prompt = `Generate a 7 word max summary for the source I have provided. Ensure that the summary is hyper-specfic, concise, and very clear. This is the content of the source: ${source}.`;
 
         return await this.GenerateText(prompt);
     }
