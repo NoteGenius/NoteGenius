@@ -136,7 +136,7 @@ class AIHandler {
             const baseUrl = process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
             ? `https://${process.env.VERCEL_URL}`
             : 'http://localhost:3000';
-            console.log(process.env.NEXT_PUBLIC_VERCEL_URL)
+            console.log(window.location.origin)
             const response = await fetch(`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/transcription`, {
                 method: "POST",
                 headers: {
