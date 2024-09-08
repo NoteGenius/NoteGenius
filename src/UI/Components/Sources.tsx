@@ -238,7 +238,7 @@ const Sources = () => {
                         {selectedSource === "youtube" && (
                             <input
                                 type="text"
-                                placeholder="Paste YouTube link here..."
+                                placeholder="Paste YouTube link here and press 'Enter'"
                                 className="w-5/6 md:w-[60vh] bg-transparent text-white border-2 border-green-600 p-4 rounded-lg"
                                 onKeyDown={fetchYoutubeTranscript}
                             />

@@ -1,4 +1,5 @@
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
+import {Innertube} from 'youtubei.js/web';
 
 /**
  * AIHandler
@@ -129,14 +130,11 @@ class AIHandler {
     }
 
     /**
-     * Fetches the transcript of a YouTube video using npm package
+     * Fetches the transcript of a YouTube video using API request
      */
     public async FetchYoutubeTranscript(url: string): Promise<string> {
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
-            ? `https://${process.env.VERCEL_URL}`
-            : 'http://localhost:3000';
-            const response = await fetch(`${baseUrl}/api/transcription`, {
+            const response = await fetch(`/api/transcription`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -145,9 +143,7 @@ class AIHandler {
             });
 
             const data = await response.json();
-            return data.transcript
-                .map((segment: { text: string }) => segment.text)
-                .join(" ");
+            return data.transcript.toString();
         } catch (error) {
             alert("Failed to fetch the YouTube transcript. Please try again.");
             throw error;
