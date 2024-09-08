@@ -5,7 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import { FaICursor } from "react-icons/fa";
 import { FiFileText, FiTrash2, FiX, FiYoutube } from "react-icons/fi";
 
-// import pdfToText from "react-pdftotext";
+import { pdfjs } from 'react-pdf';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url,
+).toString();
+
 import mammoth from 'mammoth';
 
 const Sources = () => {
@@ -103,9 +109,17 @@ const Sources = () => {
             let extractedText = ''; // stores the extracted text
 
             if (file.type === 'application/pdf') { // handling pdf files
-                // await pdfToText(file)
-                //     .then(text => extractedText = text)
-                //     .catch(error => alert("Failed to extract text from PDF. Please try again."));
+                const fileBuffer = await file.arrayBuffer();
+                const pdf = await pdfjs.getDocument({ data: fileBuffer }).promise;
+
+                // Extract text from each page of the PDF
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+
+                    const pageText = textContent.items.map((item: any) => item.str).join(' ');
+                    extractedText += pageText + ' ';
+                }
             } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') { // handling docx files
                 const arrayBuffer = await file.arrayBuffer();
                 const docText = await mammoth.extractRawText({ arrayBuffer });
@@ -116,6 +130,7 @@ const Sources = () => {
             }
 
             // Add the extracted text to the current card as a source
+            console.log(extractedText);
             addSource(extractedText);
         }
 
