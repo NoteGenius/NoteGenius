@@ -3,9 +3,8 @@ import { CardHandler } from "@/Core/CardHandler";
 import { OpenSourcesPanelEvent } from "@/Core/ChatEvents";
 import { useEffect, useRef, useState } from "react";
 import { FaICursor } from "react-icons/fa";
-import { FiFileText, FiTrash2, FiX, FiYoutube } from "react-icons/fi";
+import { FiFileText, FiTrash2, FiYoutube } from "react-icons/fi";
 
-import * as pdfjs from 'pdfjs-dist';
 import mammoth from 'mammoth';
 
 const Sources = () => {
@@ -30,11 +29,6 @@ const Sources = () => {
                 return { promise, resolve, reject };
             };
     }
-
-    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
-    import.meta.url,
-    ).toString(); // Set the worker source for the pdf reader
 
     /**
      * Handles opening the sources panel.
@@ -120,18 +114,7 @@ const Sources = () => {
 
             let extractedText = ''; // stores the extracted text
 
-            if (file.type === 'application/pdf') { // handling pdf files
-                const fileBuffer = await file.arrayBuffer();
-                const pdf = await pdfjs.getDocument({ data: fileBuffer }).promise;
-
-                for (let i = 1; i <= pdf.numPages; i++) { // Extract text from each page of the PDF
-                    const page = await pdf.getPage(i);
-                    const textContent = await page.getTextContent();
-
-                    const pageText = textContent.items.map((item: any) => item.str).join(' ');
-                    extractedText += pageText + ' ';
-                }
-            } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') { // handling docx files
+            if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') { // handling docx files
                 const arrayBuffer = await file.arrayBuffer();
                 const docText = await mammoth.extractRawText({ arrayBuffer });
                 extractedText = docText.value;
@@ -141,7 +124,6 @@ const Sources = () => {
             }
 
             // Add the extracted text to the current card as a source
-            console.log(extractedText);
             addSource(extractedText);
         }
 
@@ -209,10 +191,10 @@ const Sources = () => {
                         {selectedSource === "file" && (
                             <>
                                 <div className="w-5/6 md:w-[60vh]">
-                                    <label className="block mb-2">Attach a file (Word or PDF):</label>
+                                    <label className="block mb-2">Attach a file (Word, PDF coming soon):</label>
                                     <input
                                         type="file"
-                                        accept=".doc,.docx,.pdf"
+                                        accept=".doc,.docx"
                                         className="w-full bg-transparent border-2 border-green-600 p-4 rounded-lg"
                                         onChange={handleFileUpload}
                                     />

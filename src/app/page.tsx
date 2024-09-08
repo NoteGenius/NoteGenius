@@ -7,20 +7,6 @@ import Textbar from "@/UI/Components/Textbar";
 import Topbar from "@/UI/Components/Topbar";
 import { useEffect, useState } from "react";
 
-if (typeof Promise.withResolvers === 'undefined') {
-    if (window)
-        // @ts-expect-error This does not exist outside of polyfill which this is doing
-        window.Promise.withResolvers = function () {
-            let resolve, reject;
-            const promise = new Promise((res, rej) => {
-                resolve = res;
-                reject = rej;
-            });
-            return { promise, resolve, reject };
-        };
-}
-  
-
 /**
  * This component pieces together the different components of the main page and renders them
  */
