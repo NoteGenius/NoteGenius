@@ -133,13 +133,12 @@ class AIHandler {
      */
     public async FetchYoutubeTranscript(url: string): Promise<string> {
         try {
-            const baseUrl = process.env.VERCEL_URL
+            const baseUrl = process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
             ? `https://${process.env.VERCEL_URL}`
             : 'http://localhost:3000';
             const response = await fetch(`${baseUrl}/api/transcription`, {
                 method: "POST",
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ url }),

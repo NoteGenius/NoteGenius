@@ -14,7 +14,12 @@ export async function POST(request: Request) {
         // Fetch transcript from YouTube
         const transcript = await YoutubeTranscript.fetchTranscript(url);
 
-        return NextResponse.json({ transcript: transcript });
+        return new Response(JSON.stringify({ transcript }), {
+            headers: {
+                'Access-Control-Allow-Origin': '*', // Allow all origins, or restrict to specific domain in production
+                'Content-Type': 'application/json',
+            },
+        });
     } catch (error) {
         console.error(error);
         return NextResponse.json(
