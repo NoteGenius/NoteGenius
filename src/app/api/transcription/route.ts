@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { YoutubeTranscript } from "youtube-transcript";
+// import { YoutubeTranscript } from "youtube-transcript";
+import {Innertube} from 'youtubei.js/web';
 
 /**
  * API request to fetch YouTube transcript on the server side
@@ -12,13 +13,19 @@ export async function POST(request: Request) {
         const { url } = await request.json();
 
         // Fetch transcript from YouTube
-        const transcript = await YoutubeTranscript.fetchTranscript(url);
+        const youtube = await Innertube.create({
+            lang: 'en',
+            location: 'US',
+            retrieve_player: false,
+        });
+        const info = await youtube.getInfo(url);
+        const transcriptData = await info.getTranscript();
+        const transcript = transcriptData.transcript.content?.body?.initial_segments.map((segment) => segment.snippet.text)
 
         return NextResponse.json({ transcript });
     } catch (error) {
-        console.error(error);
         return NextResponse.json(
-            { error: "Failed to fetch transcript" },
+            { error: error },
             { status: 500 },
         );
     }
