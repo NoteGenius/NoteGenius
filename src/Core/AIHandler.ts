@@ -123,7 +123,7 @@ class AIHandler {
      * @returns A promise resolving to the generated source summary.
      */
     public async GenerateSourceSummary(source: string): Promise<string> {
-        const prompt = `Generate a 7 word max summary for the source I have provided. Ensure that the summary is hyper-specfic, concise, and very clear. This is the content of the source: ${source}.`;
+        const prompt = `Generate a 7 word max summary for the source I have provided. Ensure that the summary is hyper-specfic, concise, and very clear. If the content is empty, simply response with "Empty source". This is the content of the source: ${source}.`;
 
         return await this.GenerateText(prompt);
     }
