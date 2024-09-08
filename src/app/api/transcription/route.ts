@@ -28,3 +28,18 @@ export async function POST(request: Request) {
         );
     }
 }
+
+/**
+ * Handle CORS preflight requests
+ *
+ * @returns appropriate headers for OPTIONS preflight
+ */
+export async function OPTIONS() {
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Origin': '*', // Allow all origins
+        'Access-Control-Allow-Methods': 'POST, OPTIONS', // Allow POST and OPTIONS methods
+        'Access-Control-Allow-Headers': 'Content-Type', // Allow Content-Type header
+      },
+    });
+  }

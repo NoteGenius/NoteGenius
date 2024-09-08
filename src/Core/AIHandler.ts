@@ -134,7 +134,7 @@ class AIHandler {
     public async FetchYoutubeTranscript(url: string): Promise<string> {
         try {
             console.log(window.location.origin)
-            const response = await fetch(`${window.location.origin}/api/transcription`, {
+            const response = await fetch(`/api/transcription`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
