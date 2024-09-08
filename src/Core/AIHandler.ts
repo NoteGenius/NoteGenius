@@ -133,7 +133,8 @@ class AIHandler {
      */
     public async FetchYoutubeTranscript(url: string): Promise<string> {
         try {
-            const response = await fetch("/api/transcription", {
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || ""; // Get the base URL
+            const response = await fetch(`${baseUrl}/api/transcription`, {
                 method: "POST",
                 headers: {
                     'Access-Control-Allow-Origin': '*',
