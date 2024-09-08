@@ -142,9 +142,7 @@ class AIHandler {
             });
 
             const data = await response.json();
-            return data.transcript
-                .map((segment: { text: string }) => segment.text)
-                .join(" ");
+            return data.transcript;
         } catch (error) {
             alert("Failed to fetch the YouTube transcript. Please try again.");
             throw error;
