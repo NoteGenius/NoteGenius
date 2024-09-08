@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaICursor } from "react-icons/fa";
 import { FiFileText, FiTrash2, FiX, FiYoutube } from "react-icons/fi";
 
-import pdfToText from "react-pdftotext";
+// import pdfToText from "react-pdftotext";
 import mammoth from 'mammoth';
 
 const Sources = () => {
@@ -103,9 +103,9 @@ const Sources = () => {
             let extractedText = ''; // stores the extracted text
 
             if (file.type === 'application/pdf') { // handling pdf files
-                await pdfToText(file)
-                    .then(text => extractedText = text)
-                    .catch(error => alert("Failed to extract text from PDF. Please try again."));
+                // await pdfToText(file)
+                //     .then(text => extractedText = text)
+                //     .catch(error => alert("Failed to extract text from PDF. Please try again."));
             } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') { // handling docx files
                 const arrayBuffer = await file.arrayBuffer();
                 const docText = await mammoth.extractRawText({ arrayBuffer });
