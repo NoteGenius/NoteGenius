@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         console.error(error);
         return NextResponse.json(
             { error: "Failed to fetch transcript" },
-            { status: 500 },
+            { status: 501 },
         );
     }
 }
