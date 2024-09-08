@@ -129,7 +129,7 @@ class AIHandler {
     }
 
     /**
-     * Fetches the transcript of a YouTube video using npm package
+     * Fetches the transcript of a YouTube video using API request
      */
     public async FetchYoutubeTranscript(url: string): Promise<string> {
         try {

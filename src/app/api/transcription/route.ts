@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-// import { YoutubeTranscript } from "youtube-transcript";
 import {Innertube} from 'youtubei.js/web';
 
 /**
@@ -12,7 +11,7 @@ function extractVideoID(url: string): string | null {
 }
 
 /**
- * API request to fetch YouTube transcript on the server side
+ * API POST request to fetch YouTube transcript on the server side
  *
  * @param request - The request object
  * @returns the transcript of the video
