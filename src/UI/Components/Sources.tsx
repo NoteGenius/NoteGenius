@@ -5,13 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaICursor } from "react-icons/fa";
 import { FiFileText, FiTrash2, FiX, FiYoutube } from "react-icons/fi";
 
-import { pdfjs } from 'react-pdf';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
-).toString();
-
+import * as pdfjs from 'pdfjs-dist';
 import mammoth from 'mammoth';
 
 const Sources = () => {
@@ -23,6 +17,11 @@ const Sources = () => {
 
     const [selectedSource, setSelectedSource] = useState("file"); // Default is file attachment
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]); // Selected files for upload
+
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url,
+    ).toString(); // Set the worker source for the pdf reader
 
     /**
      * Handles opening the sources panel.
@@ -112,8 +111,7 @@ const Sources = () => {
                 const fileBuffer = await file.arrayBuffer();
                 const pdf = await pdfjs.getDocument({ data: fileBuffer }).promise;
 
-                // Extract text from each page of the PDF
-                for (let i = 1; i <= pdf.numPages; i++) {
+                for (let i = 1; i <= pdf.numPages; i++) { // Extract text from each page of the PDF
                     const page = await pdf.getPage(i);
                     const textContent = await page.getTextContent();
 
