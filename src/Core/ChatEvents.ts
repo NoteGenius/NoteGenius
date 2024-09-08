@@ -84,3 +84,25 @@ export class AddCardEvent extends Event {
         });
     }
 }
+
+export class OpenSourcesPanelEvent extends Event {
+    constructor() {
+        super("OpenSourcesPanel", { bubbles: true, cancelable: true });
+    }
+
+    public Dispatch() {
+        window.dispatchEvent(this);
+    }
+
+    public static Listen(callback: () => void) {
+        window.addEventListener("OpenSourcesPanel", (event: Event) => {
+            callback();
+        });
+    }
+
+    public static RemoveListener(callback: () => void) {
+        window.removeEventListener("OpenSourcesPanel", (event: Event) => {
+            callback();
+        });
+    }
+}
