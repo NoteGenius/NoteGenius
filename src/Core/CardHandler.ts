@@ -1,5 +1,5 @@
 import AIHandler from "./AIHandler";
-import { AddCardEvent, ChatEvent } from "./ChatEvents";
+import { ChatEvent, RecentHistoryEvent } from "./ChatEvents";
 
 /**
  * CardHandler
@@ -69,16 +69,19 @@ class CardHandler {
                           value,
                       ])
                     : []; // If _chats is not an array, fallback to an empty array to prevent errors
-                    
+
                 // Convert the array of entries back to a Map for sources
                 const sourceEntries = Array.isArray(cardData._sources)
-                    ? cardData._sources.map(([key, value]: [string, string]) => [
-                            key,
-                            value,
-                        ])
+                    ? cardData._sources.map(
+                          ([key, value]: [string, string]) => [key, value],
+                      )
                     : []; // If _sources is not an array, fallback to an empty array to prevent errors
 
-                return new Card(new Map(chatEntries), new Map(sourceEntries), cardData._title);
+                return new Card(
+                    new Map(chatEntries),
+                    new Map(sourceEntries),
+                    cardData._title,
+                );
             });
         }
     }
@@ -105,17 +108,17 @@ class CardHandler {
      */
     public AddCard(card: Card): void {
         this._cards.push(card);
-        new AddCardEvent().Dispatch();
+        new RecentHistoryEvent().Dispatch();
         this.SaveCards();
     }
 
     /**
      * Removes a card from the list by index and saves the updated list
      *
-     * @param index - the index of the card to remove
+     * @param card - the instance of the card
      */
-    public RemoveCard(index: number): void {
-        this._cards.splice(index, 1);
+    public RemoveCard(card: Card): void {
+        this._cards = this._cards.filter((c) => c !== card);
         this.SaveCards();
     }
 }
@@ -137,10 +140,6 @@ class Card {
         return this._title;
     }
 
-    public set title(newTitle: string) {
-        this._title = newTitle;
-    }
-
     public get chats(): Map<MessageInfo, string> {
         return this._chats;
     }
@@ -160,7 +159,11 @@ class Card {
      * @param chats - the messages in the card
      * @param title - the title of the card
      */
-    constructor(chats?: Map<MessageInfo, string>, sources?: Map<string, string>, title?: string) {
+    constructor(
+        chats?: Map<MessageInfo, string>,
+        sources?: Map<string, string>,
+        title?: string,
+    ) {
         this._chats = chats || new Map<MessageInfo, string>();
         this._sources = sources || new Map<string, string>();
         this._title = title || "untitled";
@@ -175,6 +178,14 @@ class Card {
     }
 
     /**
+     * Sets the title of the card and saves the card
+     */
+    public SetTitle(title: string) {
+        this._title = title;
+        CardHandler.GetInstance().SaveCards();
+    }
+
+    /**
      * Adds a message to the card
      * generates the title of the card if it is the first message
      *
@@ -182,19 +193,21 @@ class Card {
      * @param userSent - whether the message was sent by the user or the bot
      */
     public async AddChat(message: string, userSent: boolean) {
-
         if (this.botIsTyping && userSent) {
             console.error("Bot is typing, cannot send message");
             return;
-        } else if (userSent) { // if the user sent this message, the bot is typing
+        } else if (userSent) {
+            // if the user sent this message, the bot is typing
             this._botIsTyping = true;
-        } else if (!userSent) { // if the bot sent this message, the bot has stopped typing
+        } else if (!userSent) {
+            // if the bot sent this message, the bot has stopped typing
             this._botIsTyping = false;
         }
 
         this._chats.set(new MessageInfo(this._currentId, userSent), message); // add the message to the card
 
-        if (this._currentId === 0) { // adding title and card to the card handler if it is the first message
+        if (this._currentId === 0) {
+            // adding title and card to the card handler if it is the first message
             this._title = await AIHandler.GetInstance().GenerateCardTitle(
                 Array.from(this._chats.values()),
             );
@@ -208,19 +221,22 @@ class Card {
     /**
      * Adds a source to the card
      * generates a 5 word summary of the source
-     * 
+     *
      * @param source - the source to be added to the card
      */
     public async AddSource(source: string): Promise<boolean> {
-        this._sources.set(await AIHandler.GetInstance().GenerateSourceSummary(source), source)
+        this._sources.set(
+            await AIHandler.GetInstance().GenerateSourceSummary(source),
+            source,
+        );
         CardHandler.GetInstance().SaveCards();
 
         return true;
     }
 
-    /** 
-     * Removes a source from the card 
-     * 
+    /**
+     * Removes a source from the card
+     *
      * @param source - the summary of the source to be removed
      */
     public RemoveSource(source: string) {

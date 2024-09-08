@@ -116,9 +116,9 @@ class AIHandler {
         return await this.GenerateText(prompt);
     }
 
-    /** 
+    /**
      * Generates a 4-5 word summary for a source based on its content.
-     * 
+     *
      * @param source - The content of the source.
      * @returns A promise resolving to the generated source summary.
      */
@@ -127,29 +127,32 @@ class AIHandler {
 
         return await this.GenerateText(prompt);
     }
-    
+
     /**
      * Fetches the transcript of a YouTube video using npm package
      */
     public async FetchYoutubeTranscript(url: string): Promise<string> {
-
         try {
-            const response = await fetch('/api/transcription', {
-                method: 'POST',
+            const baseUrl = process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+            ? `https://${process.env.VERCEL_URL}`
+            : 'http://localhost:3000';
+            const response = await fetch(`${baseUrl}/api/transcription`, {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ url }),
             });
 
             const data = await response.json();
-            return data.transcript.map((segment: { text: string }) => segment.text).join(' ');
+            return data.transcript
+                .map((segment: { text: string }) => segment.text)
+                .join(" ");
         } catch (error) {
             alert("Failed to fetch the YouTube transcript. Please try again.");
             throw error;
         }
     }
-
 }
 
 export default AIHandler;
