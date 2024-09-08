@@ -6,7 +6,7 @@ import {
 } from "@mui/icons-material";
 import RecentHistoryCard from "./RecentHistoryCard"; // Adjust the import path as necessary
 import { CardHandler } from "@/Core/CardHandler";
-import { AddCardEvent } from "@/Core/ChatEvents";
+import { RecentHistoryEvent } from "@/Core/ChatEvents";
 
 /**
  * Dropdown component for displaying recent history cards on the top right of the screen.
@@ -27,9 +27,9 @@ const RecentHistoryDropdown = () => {
     };
 
     /**
-     * Handle when a card is added to rerender the dropdown
+     * Handles recent history event to rerender the dropdown
      */
-    const handleAddCard = () => {
+    const handleRender = () => {
         setForceRender((prev) => !prev);
     };
 
@@ -38,12 +38,12 @@ const RecentHistoryDropdown = () => {
      */
     useEffect(() => {
         if (!isMounted.current) {
-            AddCardEvent.Listen(handleAddCard);
+            RecentHistoryEvent.Listen(handleRender);
 
             isMounted.current = true;
         }
         return () => {
-            AddCardEvent.RemoveListener(handleAddCard);
+            RecentHistoryEvent.RemoveListener(handleRender);
         };
     }, []);
 

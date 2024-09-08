@@ -1,5 +1,5 @@
 import AIHandler from "./AIHandler";
-import { AddCardEvent, ChatEvent } from "./ChatEvents";
+import { ChatEvent, RecentHistoryEvent } from "./ChatEvents";
 
 /**
  * CardHandler
@@ -105,17 +105,17 @@ class CardHandler {
      */
     public AddCard(card: Card): void {
         this._cards.push(card);
-        new AddCardEvent().Dispatch();
+        new RecentHistoryEvent().Dispatch();
         this.SaveCards();
     }
 
     /**
      * Removes a card from the list by index and saves the updated list
      *
-     * @param index - the index of the card to remove
+     * @param card - the instance of the card
      */
-    public RemoveCard(index: number): void {
-        this._cards.splice(index, 1);
+    public RemoveCard(card: Card): void {
+        this._cards = this._cards.filter((c) => c !== card);
         this.SaveCards();
     }
 }
@@ -135,10 +135,6 @@ class Card {
 
     public get title(): string {
         return this._title;
-    }
-
-    public set title(newTitle: string) {
-        this._title = newTitle;
     }
 
     public get chats(): Map<MessageInfo, string> {
@@ -172,6 +168,14 @@ class Card {
                     ...Array.from(this._chats.keys()).map((info) => info.id),
                 ) + 1;
         }
+    }
+
+    /** 
+     * Sets the title of the card and saves the card
+     */
+    public SetTitle(title: string) {
+        this._title = title;
+        CardHandler.GetInstance().SaveCards();
     }
 
     /**

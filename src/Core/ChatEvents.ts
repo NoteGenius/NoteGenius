@@ -59,13 +59,12 @@ export class TextbarResizeEvent extends Event {
 }
 
 /**
- * Event for when a card is added
- *
- * rerenders the dropdown
+ * Event for Recent history events
+ * When the recent history cards are changed the recent history will be rerendered
  */
-export class AddCardEvent extends Event {
+export class RecentHistoryEvent extends Event {
     constructor() {
-        super("AddCard", { bubbles: true, cancelable: true });
+        super("RecentHistoryEvent", { bubbles: true, cancelable: true });
     }
 
     public Dispatch() {
@@ -73,18 +72,23 @@ export class AddCardEvent extends Event {
     }
 
     public static Listen(callback: () => void) {
-        window.addEventListener("AddCard", (event: Event) => {
+        window.addEventListener("RecentHistoryEvent", (event: Event) => {
             callback();
         });
     }
 
     public static RemoveListener(callback: () => void) {
-        window.removeEventListener("AddCard", (event: Event) => {
+        window.removeEventListener("RecentHistoryEvent", (event: Event) => {
             callback();
         });
     }
 }
 
+/**
+ * Event for when the sources panel is opened
+ * 
+ * opens the sources panel
+ */
 export class OpenSourcesPanelEvent extends Event {
     constructor() {
         super("OpenSourcesPanel", { bubbles: true, cancelable: true });
