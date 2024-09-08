@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaICursor } from "react-icons/fa";
 import { FiFileText, FiTrash2, FiYoutube } from "react-icons/fi";
 
+import pdfToText from "react-pdftotext";
 import mammoth from 'mammoth';
 
 const Sources = () => {
@@ -16,19 +17,6 @@ const Sources = () => {
 
     const [selectedSource, setSelectedSource] = useState("file"); // Default is file attachment
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]); // Selected files for upload
-
-    if (typeof Promise.withResolvers === 'undefined') {
-        if (window)
-            // @ts-expect-error This does not exist outside of polyfill which this is doing
-            window.Promise.withResolvers = function () {
-                let resolve, reject;
-                const promise = new Promise((res, rej) => {
-                    resolve = res;
-                    reject = rej;
-                });
-                return { promise, resolve, reject };
-            };
-    }
 
     /**
      * Handles opening the sources panel.
@@ -114,7 +102,11 @@ const Sources = () => {
 
             let extractedText = ''; // stores the extracted text
 
-            if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') { // handling docx files
+            if (file.type === 'application/pdf') { // handling pdf files
+                await pdfToText(file)
+                    .then((text) => extractedText = text)
+                    .catch((_) => console.error("Failed to extract text from pdf"));
+            } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') { // handling docx files
                 const arrayBuffer = await file.arrayBuffer();
                 const docText = await mammoth.extractRawText({ arrayBuffer });
                 extractedText = docText.value;
@@ -191,10 +183,10 @@ const Sources = () => {
                         {selectedSource === "file" && (
                             <>
                                 <div className="w-5/6 md:w-[60vh]">
-                                    <label className="block mb-2">Attach a file (Word, PDF coming soon):</label>
+                                    <label className="block mb-2">Attach a file (Word, PDF):</label>
                                     <input
                                         type="file"
-                                        accept=".doc,.docx"
+                                        accept=".doc,.docx,.pdf"
                                         className="w-full bg-transparent border-2 border-green-600 p-4 rounded-lg"
                                         onChange={handleFileUpload}
                                     />
