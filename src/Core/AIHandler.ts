@@ -1,4 +1,5 @@
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
+import {Innertube} from 'youtubei.js/web';
 
 /**
  * AIHandler
@@ -142,7 +143,7 @@ class AIHandler {
             });
 
             const data = await response.json();
-            return data.transcript;
+            return data.transcript.toString();
         } catch (error) {
             alert("Failed to fetch the YouTube transcript. Please try again.");
             throw error;
