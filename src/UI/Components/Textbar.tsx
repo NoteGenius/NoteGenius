@@ -1,6 +1,6 @@
 import AIHandler from "@/Core/AIHandler";
 import { Card, CardHandler } from "@/Core/CardHandler";
-import { ChatEvent, OpenSourcesPanelEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
+import { ChatEvent, OpenSourcesPanelEvent, RecentHistoryEvent, TextbarResizeEvent } from "@/Core/ChatEvents";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { FiMessageSquare, FiPaperclip, FiSend } from "react-icons/fi";
 
@@ -96,6 +96,7 @@ const Textbar: React.FC = () => {
      */
     const handleNewChat = () => {
         cardHandler.currentCard = new Card();
+        new RecentHistoryEvent().Dispatch();
     };
 
     return (

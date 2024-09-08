@@ -33,6 +33,9 @@ const RecentHistoryDropdown = () => {
         setForceRender((prev) => !prev);
     };
 
+    useEffect(() => {
+    }, [forceRender]);
+
     /**
      * Listen for when cards are added to rerender the dropdown
      */
@@ -71,7 +74,7 @@ const RecentHistoryDropdown = () => {
                     className="flex flex-col space-y-2 w-full max-w-[300px] mx-auto"
                 >
                     {cardHandler?.cards.map((card, index) => (
-                        <RecentHistoryCard key={index} card={card} />
+                        <RecentHistoryCard key={index} card={card} isCurrent={card === cardHandler.currentCard} />
                     ))}
                 </Box>
             </Collapse>
