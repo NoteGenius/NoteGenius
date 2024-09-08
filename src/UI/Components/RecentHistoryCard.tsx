@@ -62,7 +62,7 @@ const RecentHistoryCard: React.FC<RecentHistoryCardProps> = ({ card }) => {
         <div
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="relative bg-gray-300 rounded-2xl p-2.5 mx-auto my-1 text-center text-base font-sans font-bold text-black w-full shadow-md hover:shadow-lg transition-shadow duration-300"
+            className="relative bg-white rounded-2xl p-2.5 mx-auto my-1 text-center text-base font-sans font-bold text-black w-full shadow-md hover:shadow-lg transition-shadow duration-300 drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]"
         >
             {isEditing ? (
                 <input
