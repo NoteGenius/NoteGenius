@@ -1,0 +1,47 @@
+body {
+    height: 98dvh;
+}
+
+.bubble {
+    position: absolute;
+    opacity: 0.5;
+    width: 400px;
+    aspect-ratio: 1/1;
+    animation: animate 10s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite
+        alternate forwards;
+    filter: blur(40px);
+    z-index: -1;
+    background: linear-gradient(
+        47deg,
+        rgba(0, 255, 0, 0.5) 21%,
+        rgba(0, 128, 0, 0.7) 67%,
+        rgba(0, 100, 0, 1) 81%
+    );
+}
+
+@keyframes animate {
+    0% {
+        transform: translate(40%, -25%) scale(1);
+        border-radius: 60% 40% 30% 70% / 100% 85% 92% 74%;
+    }
+    25% {
+        transform: translate(20%, -10%) scale(1.1);
+        border-radius: 50% 30% 40% 60% / 80% 90% 70% 50%;
+        rotate: 20deg;
+    }
+    50% {
+        transform: translate(-40%, 13%) scale(1.15);
+        border-radius: 20% 71% 47% 70% / 81% 15% 22% 54%;
+        rotate: 41deg;
+    }
+    75% {
+        transform: translate(-50%, 30%) scale(1.1);
+        border-radius: 40% 60% 50% 30% / 70% 50% 80% 90%;
+        rotate: -20deg;
+    }
+    100% {
+        transform: translate(45%, 39%) scale(1.05);
+        border-radius: 100% 75% 92% 74% / 60% 80% 30% 70%;
+        rotate: -60deg;
+    }
+}
