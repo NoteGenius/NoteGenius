@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "@/style/globals.css";
+import "@/UI/Style/globals.css";
+import "core-js/proposals/promise-with-resolvers";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "NoteGenius",
-    icons: [
-        {
-            rel: "icon",
-            url: "/favicon.ico",
-        },
-    ],
     description: "Your personal study guide from the future",
 };
 
