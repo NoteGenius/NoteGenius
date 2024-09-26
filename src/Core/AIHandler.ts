@@ -53,7 +53,10 @@ class AIHandler {
             const response = await this._aiModel.generateContent([prompt]);
             return response.response.text();
         } catch (error: any) {
-            if (error.message.includes("Resource has been exhausted")) {
+            if (
+                error.message.includes("Resource has been exhausted") ||
+                error.message.includes("Too Many Requests")
+            ) {
                 console.warn(
                     "Quota exceeded for the current model. Switching to lighter model.",
                 );
@@ -71,11 +74,21 @@ class AIHandler {
                     throw err; // Re-throw if the lighter model also fails
                 }
             } else {
-                console.error(
-                    "An error occurred during text generation.",
-                    error,
+                console.warn(
+                    "Attempting to generate text with the lighter model.",
                 );
-                throw error;
+                try {
+                    const response = await this._lightAIModel.generateContent([
+                        prompt,
+                    ]);
+                    return response.response.text();
+                } catch (err: any) {
+                    console.error(
+                        "Failed to generate text with the lighter model.",
+                        err,
+                    );
+                    throw err; // Re-throw if the lighter model also fails
+                }
             }
         }
     }
